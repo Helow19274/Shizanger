@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "181242406722",
+    "firebase_url": "https://messenger-68b64.firebaseio.com",
+    "project_id": "messenger-68b64",
+    "storage_bucket": "messenger-68b64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181242406722:android:ecef5341cbe4588afa0adb",
+        "android_client_info": {
+          "package_name": "com.helow.messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181242406722-m0n267klnfpu6of5s6e2hc81674pcck8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWcwSRVVqvR6d53DU_yziO0qC7VKIVvRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181242406722-m0n267klnfpu6of5s6e2hc81674pcck8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

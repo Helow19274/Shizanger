@@ -1,0 +1,85 @@
+package com.helow.messenger
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
+import kotlinx.android.synthetic.main.fragment_contacts.view.*
+import kotlin.concurrent.thread
+
+class ContactsFragment : Fragment() {
+    private val model: MainActivityViewModel by activityViewModels()
+    private val adapter = ItemAdapter<ContactItem>()
+    private val fastAdapter = FastAdapter.with(adapter)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        model.initListeners()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_contacts, container, false)
+        view.recycler_view.adapter = fastAdapter
+        setHasOptionsMenu(true)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        model.contacts.observe(viewLifecycleOwner, Observer {
+            adapter.set(it)
+        })
+
+        fastAdapter.onClickListener = { _, _, item, _ ->
+            val activity = requireActivity() as MainActivity
+
+            findNavController().navigate(ContactsFragmentDirections.actionContactsFragmentToChatFragment(item.user.uid, activity.intent.getStringExtra(Intent.EXTRA_TEXT)))
+            false
+        }
+
+        fastAdapter.onLongClickListener = { _, _, item, _ ->
+            MaterialAlertDialogBuilder(context)
+                .setTitle("Are you sure?")
+                .setMessage("Remove contact?")
+                .setNegativeButton("No") { _, _ -> }
+                .setPositiveButton("Yes") { _, _ ->
+                    model.db.getReference("users/${model.auth.currentUser?.uid}/contacts/${item.contactKey}").removeValue()
+                }
+                .show()
+            false
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.log_out -> {
+                model.messaging.isAutoInitEnabled = false
+                    model.db.getReference("/users/${model.auth.currentUser?.uid}/token").setValue("").addOnSuccessListener {
+                        thread {
+                            model.instanceId.deleteInstanceId()
+                        }
+                        model.auth.signOut()
+                        model.contacts.value?.clear()
+                        findNavController().navigate(ContactsFragmentDirections.actionChatsFragmentToLoginFragment())
+                }
+            }
+
+            R.id.add_contacts -> findNavController().navigate(ContactsFragmentDirections.actionContactsFragmentToAddContactsFragment())
+
+            R.id.profile -> findNavController().navigate(ContactsFragmentDirections.actionContactsFragmentToProfileFragment())
+        }
+        return super.onOptionsItemSelected(item)
+    }
+}
