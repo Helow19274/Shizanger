@@ -39,7 +39,6 @@ class ContactsFragment : Fragment() {
 
         fastAdapter.onClickListener = { _, _, item, _ ->
             val activity = requireActivity() as MainActivity
-
             findNavController().navigate(ContactsFragmentDirections.actionContactsFragmentToChatFragment(item.user.uid, activity.intent.getStringExtra(Intent.EXTRA_TEXT)))
             false
         }

@@ -1,5 +1,6 @@
 package com.helow.messenger
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        intent.removeExtra(Intent.EXTRA_TEXT)
         if (model.auth.currentUser != null) {
             model.db.getReference("users/${model.auth.currentUser!!.uid}/online").setValue(false)
             model.db.getReference("users/${model.auth.currentUser!!.uid}/lastSeen").setValue(OffsetDateTime.now(ZoneOffset.UTC).toString())

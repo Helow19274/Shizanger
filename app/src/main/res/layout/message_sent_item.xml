@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,17 +16,18 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:background="@drawable/rounded"
-            android:layout_gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp">
+            android:layout_gravity="end"
+            android:layout_margin="4dp"
+            android:background="@drawable/rounded"
+            tools:ignore="UselessParent">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/message_text"
-                android:autoLink="all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:autoLink="all"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:layout_gravity="end"
@@ -34,7 +36,8 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/timestamp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
         </LinearLayout>
     </LinearLayout>
 

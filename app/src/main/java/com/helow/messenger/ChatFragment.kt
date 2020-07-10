@@ -1,5 +1,6 @@
 package com.helow.messenger
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -115,8 +116,10 @@ class ChatFragment : Fragment() {
                         firstReceived = true
                 }
 
-            if (args.messageFromShare != null)
+            if (args.messageFromShare != null) {
                 sendMessage(args.uid, args.messageFromShare!!)
+                activity.intent.removeExtra(Intent.EXTRA_TEXT)
+            }
         }
 
         sendButton.setOnClickListener {
