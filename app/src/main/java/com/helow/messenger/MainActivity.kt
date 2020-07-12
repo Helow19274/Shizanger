@@ -52,17 +52,12 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.subtitle = title
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (model.auth.currentUser != null)
-            model.db.getReference("users/${model.auth.currentUser!!.uid}/online").setValue(true)
-    }
-
     override fun onStop() {
         super.onStop()
         intent.removeExtra(Intent.EXTRA_TEXT)
         if (model.auth.currentUser != null) {
             model.db.getReference("users/${model.auth.currentUser!!.uid}/online").setValue(false)
+            model.db.getReference("users/${model.auth.currentUser!!.uid}/inChatWith").setValue(null)
             model.db.getReference("users/${model.auth.currentUser!!.uid}/lastSeen").setValue(OffsetDateTime.now(ZoneOffset.UTC).toString())
         }
     }
