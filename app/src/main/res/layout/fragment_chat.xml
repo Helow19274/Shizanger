@@ -10,11 +10,13 @@
         android:id="@+id/recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="12dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/message_view"
+        app:layout_constraintBottom_toTopOf="@+id/cancel_edit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:stackFromEnd="true" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/message_view"
@@ -37,8 +39,25 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:visibility="gone"
+        android:id="@+id/cancel_edit_button"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="8dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:icon="@drawable/baseline_clear_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/send_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/message_view" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/send_button"
-        android:enabled="false"
+        android:enabled="true"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_marginTop="4dp"

@@ -23,11 +23,6 @@ class ContactsFragment : Fragment() {
         model.initListeners()
     }
 
-    override fun onStart() {
-        super.onStart()
-        model.db.getReference("users/${model.auth.currentUser!!.uid}/online").setValue(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_contacts, container, false)
         view.recycler_view.adapter = fastAdapter
@@ -54,7 +49,7 @@ class ContactsFragment : Fragment() {
                 .setMessage("Remove contact?")
                 .setNegativeButton("No") { _, _ -> }
                 .setPositiveButton("Yes") { _, _ ->
-                    model.db.getReference("users/${model.auth.currentUser?.uid}/contacts/${item.contactKey}").removeValue()
+                    model.db.getReference("users/${model.auth.uid}/contacts/${item.contactKey}").removeValue()
                 }
                 .show()
             false
@@ -69,9 +64,9 @@ class ContactsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.log_out -> {
-                model.db.getReference("users/${model.auth.currentUser!!.uid}/online").setValue(false)
+                model.db.getReference("users/${model.auth.uid}/online").setValue(false)
                 model.messaging.isAutoInitEnabled = false
-                    model.db.getReference("/users/${model.auth.currentUser?.uid}/token").setValue("").addOnSuccessListener {
+                    model.db.getReference("/users/${model.auth.uid}/token").setValue("").addOnSuccessListener {
                         thread {
                             model.instanceId.deleteInstanceId()
                         }

@@ -78,7 +78,7 @@ class RegisterFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 model.auth.createUserWithEmailAndPassword(email, password).await()
-                val uid = model.auth.currentUser!!.uid
+                val uid = model.auth.uid!!
                 model.db.getReference("users/$uid").setValue(User(uid, username, email)).await()
                 model.messaging.isAutoInitEnabled = true
                 findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToContactsFragment())

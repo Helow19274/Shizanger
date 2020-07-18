@@ -9,7 +9,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
@@ -17,13 +16,12 @@ import com.google.firebase.messaging.FirebaseMessaging
 class MainActivityViewModel : ViewModel() {
     val auth = Firebase.auth
     val db = Firebase.database
-    val firestore = Firebase.firestore.collection("messages")
     val instanceId = FirebaseInstanceId.getInstance()
     val messaging = FirebaseMessaging.getInstance()
     val contacts = MutableLiveData<ArrayList<ContactItem>>()
 
     fun initListeners() {
-        db.getReference("users/${auth.currentUser?.uid}/contacts").addChildEventListener(object : ChildEventListener {
+        db.getReference("users/${auth.uid}/contacts").addChildEventListener(object : ChildEventListener {
             override fun onCancelled(error: DatabaseError) { }
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) { }
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { }
@@ -34,7 +32,7 @@ class MainActivityViewModel : ViewModel() {
                     override fun onCancelled(error: DatabaseError) { }
 
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        contacts += ContactItem(snapshot.getValue(User::class.java)!!, snapshot2.key)
+                        contacts += ContactItem(snapshot.getValue<UserRec>()!!, snapshot2.key)
                     }
                 })
             }
@@ -45,7 +43,7 @@ class MainActivityViewModel : ViewModel() {
                     override fun onCancelled(error: DatabaseError) { }
 
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        contacts -= ContactItem(snapshot.getValue(User::class.java)!!, snapshot2.key)
+                        contacts -= ContactItem(snapshot.getValue<UserRec>()!!, snapshot2.key)
                     }
                 })
             }

@@ -11,7 +11,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.user_item.view.*
 
-open class ContactItem(val user: User, val contactKey: String?=null) : AbstractItem<ContactItem.ViewHolder>() {
+open class ContactItem(val user: UserRec, val contactKey: String?=null) : AbstractItem<ContactItem.ViewHolder>() {
     val ref = Firebase.database.getReference("users/${user.uid}")
 
     override val type: Int
@@ -33,7 +33,7 @@ open class ContactItem(val user: User, val contactKey: String?=null) : AbstractI
                 override fun onCancelled(error: DatabaseError) { }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val user = snapshot.getValue<User>()!!
+                    val user = snapshot.getValue<UserRec>()!!
                     card.isChecked = user.online
                     username.text = user.username
                 }

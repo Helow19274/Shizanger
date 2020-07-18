@@ -29,7 +29,7 @@ class AddContactsFragment : Fragment() {
         view.recycler_view.adapter = fastAdapter
 
         fastAdapter.onClickListener = { _, _, item, position ->
-            val ref = model.db.getReference("users/${model.auth.currentUser?.uid}/contacts")
+            val ref = model.db.getReference("users/${model.auth.uid}/contacts")
             ref.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) { }
 
@@ -47,7 +47,7 @@ class AddContactsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val uids = model.contacts.value.orEmpty().map { it.user.uid } + listOf(model.auth.currentUser?.uid)
+        val uids = model.contacts.value.orEmpty().map { it.user.uid } + listOf(model.auth.uid)
 
         model.db.getReference("users").addChildEventListener(viewLifecycleOwner, object : ChildEventListener {
             override fun onCancelled(error: DatabaseError) { }
@@ -58,7 +58,7 @@ class AddContactsFragment : Fragment() {
 
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 if (snapshot.key !in uids)
-                    adapter.add(ContactItem(snapshot.getValue<User>()!!))
+                    adapter.add(ContactItem(snapshot.getValue<UserRec>()!!))
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) { }

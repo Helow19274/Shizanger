@@ -22,7 +22,7 @@ class ProfileFragment : Fragment() {
         val usernameView = view.username_view
         var name = ""
 
-        model.db.getReference("users/${model.auth.currentUser!!.uid}/username").addValueEventListener(viewLifecycleOwner, object : ValueEventListener {
+        model.db.getReference("users/${model.auth.uid}/username").addValueEventListener(viewLifecycleOwner, object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) { }
 
             override fun onDataChange(snapshot: DataSnapshot) {

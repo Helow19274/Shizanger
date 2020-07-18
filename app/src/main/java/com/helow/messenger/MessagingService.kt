@@ -20,7 +20,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 class MessagingService : FirebaseMessagingService() {
-    private val ref = Firebase.database.getReference("users/${Firebase.auth.currentUser?.uid}/token")
+    private val ref = Firebase.database.getReference("users/${Firebase.auth.uid}/token")
     private lateinit var preferences: SharedPreferences
 
     override fun onMessageReceived(message: RemoteMessage) {

@@ -4,10 +4,11 @@ import android.view.View
 import android.widget.TextView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
+import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class MessageItem(private val message: Message, private val sent: Boolean, val messageId: String) : AbstractItem<MessageItem.ViewHolder>() {
+class MessageItem(val message: MessageRec, val sent: Boolean, val messageId: String) : AbstractItem<MessageItem.ViewHolder>() {
     override val type: Int
         get() = if (sent) 1 else 2
 
@@ -26,7 +27,7 @@ class MessageItem(private val message: Message, private val sent: Boolean, val m
             timestampText.text = DateTimeFormatter
                 .ofPattern("d.MM HH:mm")
                 .withZone(ZoneId.systemDefault())
-                .format(item.message.timestamp!!.toDate().toInstant())
+                .format(Instant.ofEpochMilli(item.message.timestamp))
         }
 
         override fun unbindView(item: MessageItem) {
