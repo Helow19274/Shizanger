@@ -52,7 +52,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        model.db.getReference("users/${model.auth.uid}/online").setValue(true)
+        if (model.auth.currentUser != null)
+            model.db.getReference("users/${model.auth.uid}/online").setValue(true)
     }
 
     override fun onStop() {
