@@ -1,6 +1,7 @@
 package com.helow.messenger
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,13 +34,16 @@ class ChatFragment : Fragment() {
     private lateinit var chatRef: DatabaseReference
     private lateinit var cancelButton: Button
     private var editId = ""
+    private var beforeEditText = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val activity = (requireActivity() as MainActivity)
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
-        val sendButton = view.send_button
         cancelButton = view.cancel_edit_button
         val recyclerView = view.recycler_view
-        val activity = (requireActivity() as MainActivity)
+        val sendButton = view.send_button
+        val message = view.message
         chatRef = model.db.getReference("messages/${if (model.auth.uid!! < args.uid) "${model.auth.uid}-${args.uid}" else "${args.uid}-${model.auth.uid}"}")
 
         recyclerView.adapter = fastAdapter
@@ -56,16 +60,15 @@ class ChatFragment : Fragment() {
                         0 -> {
                             if (items.size == 2) {
                                 editId = item.messageId
-                                val m = view.message
-                                view.message.setText(item.message.text)
-                                m.requestFocus()
-                                view.message.setSelection(view.message.text?.length ?: 0)
-                                val iim =
-                                    activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                                iim.toggleSoftInput(
-                                    InputMethodManager.SHOW_IMPLICIT,
-                                    InputMethodManager.SHOW_IMPLICIT
-                                )
+                                beforeEditText = message.text.toString()
+                                message.apply {
+                                    text?.clear()
+                                    append(item.message.text)
+                                    requestFocus()
+                                    postDelayed({
+                                        imm.showSoftInput(message, InputMethodManager.SHOW_IMPLICIT)
+                                    }, 100)
+                                }
                                 cancelButton.visibility = View.VISIBLE
                             } else
                                 chatRef.child(item.messageId).removeValue()
@@ -96,6 +99,7 @@ class ChatFragment : Fragment() {
         chatRef.orderByChild("timestamp").addChildEventListener(viewLifecycleOwner, object : ChildEventListener {
             override fun onCancelled(error: DatabaseError) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val value = snapshot.getValue<MessageRec>()!!
                 messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!)
@@ -125,12 +129,14 @@ class ChatFragment : Fragment() {
             lifecycleScope.launch {
                 for (chunk in chunks)
                     sendMessage(args.uid, chunk)
-                view.message.text?.clear()
+                message.text?.clear()
+                message.append(beforeEditText)
                 editId = ""
+                beforeEditText = ""
             }
         }
 
-        view.message.addTextChangedListener {
+        message.addTextChangedListener {
             sendButton.isEnabled = !it.isNullOrBlank()
         }
 
@@ -138,6 +144,14 @@ class ChatFragment : Fragment() {
             view.message.text?.clear()
             editId = ""
             cancelButton.visibility = View.GONE
+            message.text?.clear()
+            message.append(beforeEditText)
+            beforeEditText = ""
+        }
+
+        if (args.messageFromShare != null) {
+            message.append(args.messageFromShare)
+            activity.intent.removeExtra(Intent.EXTRA_TEXT)
         }
 
         return view
