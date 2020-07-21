@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Shizanger</string>
     <string name="email">Ваша почта</string>
     <string name="password">Шифръ</string>
     <string name="register">Стать участникомъ</string>
