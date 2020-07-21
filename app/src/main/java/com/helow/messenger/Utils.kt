@@ -70,9 +70,10 @@ val mePerson = Person.Builder()
     .setName("Me")
     .build()
 
-val availableLocales = hashMapOf(
+val availableLocales = sortedMapOf(
     "en" to "English",
-    "ru" to "Русский"
+    "ru" to "Русский",
+    "tt" to "Русскій(дореволюціонный)"
 )
 
 @RequiresApi(Build.VERSION_CODES.M)

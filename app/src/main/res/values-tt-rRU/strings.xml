@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Shizanger</string>
+    <string name="email">Ваша почта</string>
+    <string name="password">Шифръ</string>
+    <string name="register">Стать участникомъ</string>
+    <string name="login">Входъ</string>
+    <string name="registered">Уже участникъ?</string>
+    <string name="not_registered">Ещё не участникъ?</string>
+    <string name="username">Прозвищѣ</string>
+    <string name="registration">Стать участникомъ</string>
+    <string name="log_out">Выходъ</string>
+    <string name="add_contacts">Добавить знакомцевъ</string>
+    <string name="type_here">Письмо…</string>
+    <string name="update_username">Смѣнить прозвищѣ</string>
+    <string name="profile">Паспортъ</string>
+    <string name="contacts">Знакомцы</string>
+    <string name="user_not_exists">Участникъ не найденъ</string>
+    <string name="wrong_password">Невѣрный шифръ</string>
+    <string name="empty_field">Пустая строка</string>
+    <string name="user_already_exists">Участникъ уже есть</string>
+    <string name="too_weak_pasword">Шифръ слишкомъ простъ</string>
+    <string name="bad_email_format">Неправильный видъ почты</string>
+    <string name="change_locale">Смѣнить языкъ</string>
+    <string name="edit">Редактировать</string>
+    <string name="remove">Сжечь</string>
+    <string name="cancel">Отмѣна</string>
+    <string name="choose_action">Выберите дѣйствіе</string>
+</resources>
