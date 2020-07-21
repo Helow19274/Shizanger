@@ -66,13 +66,13 @@ class ContactsFragment : Fragment() {
             R.id.log_out -> {
                 model.db.getReference("users/${model.auth.uid}/online").setValue(false)
                 model.messaging.isAutoInitEnabled = false
-                    model.db.getReference("/users/${model.auth.uid}/token").setValue("").addOnSuccessListener {
-                        thread {
-                            model.instanceId.deleteInstanceId()
-                        }
-                        model.auth.signOut()
-                        model.contacts.value?.clear()
-                        findNavController().navigate(ContactsFragmentDirections.actionChatsFragmentToLoginFragment())
+                model.db.getReference("/users/${model.auth.uid}/token").setValue(null).addOnSuccessListener {
+                    thread {
+                        model.instanceId.deleteInstanceId()
+                    }
+                    model.auth.signOut()
+                    model.contacts.value?.clear()
+                    findNavController().navigate(ContactsFragmentDirections.actionChatsFragmentToLoginFragment())
                 }
             }
 

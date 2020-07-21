@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
@@ -33,6 +34,7 @@ class ChatFragment : Fragment() {
     private val messages = mutableMapOf<String, MessageItem>()
     private lateinit var chatRef: DatabaseReference
     private lateinit var cancelButton: Button
+    private lateinit var recyclerView: RecyclerView
     private var editId = ""
     private var beforeEditText = ""
 
@@ -41,7 +43,7 @@ class ChatFragment : Fragment() {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
         cancelButton = view.cancel_edit_button
-        val recyclerView = view.recycler_view
+        recyclerView = view.recycler_view
         val sendButton = view.send_button
         val message = view.message
         chatRef = model.db.getReference("messages/${if (model.auth.uid!! < args.uid) "${model.auth.uid}-${args.uid}" else "${args.uid}-${model.auth.uid}"}")
@@ -50,11 +52,11 @@ class ChatFragment : Fragment() {
 
         fastAdapter.onClickListener = { _, _, item, _ ->
             val items = if (item.sent)
-                arrayOf("Edit", "Remove")
+                arrayOf(getString(R.string.edit), getString(R.string.remove))
             else
-                arrayOf("Remove")
+                arrayOf(getString(R.string.remove))
             MaterialAlertDialogBuilder(context)
-                .setTitle("Choose action?")
+                .setTitle(R.string.choose_action)
                 .setItems(items) { _, which ->
                     when (which) {
                         0 -> {
@@ -76,7 +78,7 @@ class ChatFragment : Fragment() {
                         1 -> chatRef.child(item.messageId).removeValue()
                     }
                 }
-                .setNegativeButton("Cancel") { _, _ -> }
+                .setNegativeButton(R.string.cancel) { _, _ -> }
                 .show()
             false
         }
@@ -158,10 +160,11 @@ class ChatFragment : Fragment() {
     }
 
     private suspend fun sendMessage(to: String, text: String) {
+        val messageText = text.trim()
         if (editId == "")
-            chatRef.push().setValue(Message(model.auth.uid!!, to, text)).await()
+            chatRef.push().setValue(Message(model.auth.uid!!, to, messageText)).await()
         else {
-            chatRef.child(editId).setValue(MessageRec(model.auth.uid!!, to, text, messages[editId]!!.message.timestamp)).await()
+            chatRef.child(editId).setValue(MessageRec(model.auth.uid!!, to, messageText, messages[editId]!!.message.timestamp)).await()
             cancelButton.visibility = View.GONE
         }
     }

@@ -19,8 +19,12 @@ class MainActivityViewModel : ViewModel() {
     val instanceId = FirebaseInstanceId.getInstance()
     val messaging = FirebaseMessaging.getInstance()
     val contacts = MutableLiveData<ArrayList<ContactItem>>()
+    var listenersInitialized = false
 
     fun initListeners() {
+        if (listenersInitialized)
+            return
+        listenersInitialized = true
         db.getReference("users/${auth.uid}/contacts").addChildEventListener(object : ChildEventListener {
             override fun onCancelled(error: DatabaseError) { }
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) { }

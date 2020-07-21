@@ -35,23 +35,23 @@ class LoginFragment : Fragment() {
 
         view.button_login.setOnClickListener {
             if (email.text.isNullOrBlank())
-                emailView.error = "Field is empty"
+                emailView.error = getString(R.string.empty_field)
             if (password.text.isNullOrBlank())
-                passwordView.error = "Field is empty"
+                passwordView.error = getString(R.string.empty_field)
             if (!email.text.isNullOrBlank() && !password.text.isNullOrBlank())
                 signInUser(email.text.toString(), password.text.toString())
         }
 
         email.addTextChangedListener {
             if (it.isNullOrBlank())
-                emailView.error = "Field is empty"
+                emailView.error = getString(R.string.empty_field)
             else
                 emailView.error = null
         }
 
         password.addTextChangedListener {
             if (it.isNullOrBlank())
-                passwordView.error = "Field is empty"
+                passwordView.error = getString(R.string.empty_field)
             else
                 passwordView.error = null
         }
@@ -70,17 +70,18 @@ class LoginFragment : Fragment() {
             try {
                 model.auth.signInWithEmailAndPassword(email, password).await()
                 model.messaging.isAutoInitEnabled = true
+                model.db.getReference("users/${model.auth.uid}/online").setValue(true)
                 findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToContactsFragment())
             } catch (e: Exception) {
                 val view = requireView()
                 when (e) {
                     is FirebaseAuthInvalidUserException -> {
-                        view.email_view.error = "User does not exists"
+                        view.email_view.error = getString(R.string.user_not_exists)
                         view.password_view.error = null
                     }
                     is FirebaseAuthInvalidCredentialsException -> {
                         view.email_view.error = null
-                        view.password_view.error = "Wrong password"
+                        view.password_view.error = getString(R.string.wrong_password)
                     }
                     else -> Snackbar.make(view, "Unexpected error occurred: ${e.localizedMessage}", Snackbar.LENGTH_SHORT).show()
                 }

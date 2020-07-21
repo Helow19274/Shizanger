@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Messenger</string>
+    <string name="app_name" translatable="false">Shizanger</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
@@ -11,4 +11,18 @@
     <string name="log_out">Log out</string>
     <string name="add_contacts">Add contacts</string>
     <string name="type_here">Type here…</string>
+    <string name="update_username">Update username</string>
+    <string name="profile">Profile</string>
+    <string name="contacts">Contacts</string>
+    <string name="user_not_exists">User does not exists</string>
+    <string name="wrong_password">Wrong password</string>
+    <string name="empty_field">Field is empty</string>
+    <string name="user_already_exists">User already exists</string>
+    <string name="too_weak_pasword">Password is too weak</string>
+    <string name="bad_email_format">Bad email format</string>
+    <string name="change_locale">Change locale</string>
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_action">Choose action</string>
 </resources>

@@ -36,32 +36,32 @@ class RegisterFragment : Fragment() {
 
         view.button_register.setOnClickListener {
             if (username.text.isNullOrBlank())
-                usernameView.error = "Field is empty"
+                usernameView.error = getString(R.string.empty_field)
             if (email.text.isNullOrBlank())
-                emailView.error = "Field is empty"
+                emailView.error = getString(R.string.empty_field)
             if (password.text.isNullOrBlank())
-                passwordView.error = "Field is empty"
+                passwordView.error = getString(R.string.empty_field)
             if (!username.text.isNullOrBlank() && !email.text.isNullOrBlank() && !password.text.isNullOrBlank())
                 signUpUser(username.text.toString(), email.text.toString(), password.text.toString())
         }
 
         username.addTextChangedListener {
             if (it.isNullOrBlank())
-                usernameView.error = "Field is empty"
+                usernameView.error = getString(R.string.empty_field)
             else
                 usernameView.error = null
         }
 
         email.addTextChangedListener {
             if (it.isNullOrBlank())
-                emailView.error = "Field is empty"
+                emailView.error = getString(R.string.empty_field)
             else
                 emailView.error = null
         }
 
         password.addTextChangedListener {
             if (it.isNullOrBlank())
-                passwordView.error = "Field is empty"
+                passwordView.error = getString(R.string.empty_field)
             else
                 passwordView.error = null
         }
@@ -86,15 +86,15 @@ class RegisterFragment : Fragment() {
                 val view = requireView()
                 when (e) {
                     is FirebaseAuthUserCollisionException -> {
-                        view.email_view.error = "User already exists"
+                        view.email_view.error = getString(R.string.user_already_exists)
                         view.password_view.error = null
                     }
                     is FirebaseAuthWeakPasswordException -> {
                         view.email_view.error = null
-                        view.password_view.error = "Password is too weak"
+                        view.password_view.error = getString(R.string.too_weak_pasword)
                     }
                     is FirebaseAuthInvalidCredentialsException -> {
-                        view.email_view.error = "Bad email format"
+                        view.email_view.error = getString(R.string.bad_email_format)
                         view.password_view.error = null
                     }
                     else -> Snackbar.make(view, "Unexpected error occurred: ${e.localizedMessage}", Snackbar.LENGTH_SHORT).show()

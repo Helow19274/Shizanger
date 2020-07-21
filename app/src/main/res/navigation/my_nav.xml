@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.helow.messenger.RegisterFragment"
-        android:label="Registration"
+        android:label="@string/registration"
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
@@ -73,7 +73,7 @@
     <fragment
         android:id="@+id/contactsFragment"
         android:name="com.helow.messenger.ContactsFragment"
-        android:label="Contacts"
+        android:label="@string/contacts"
         tools:layout="@layout/fragment_contacts" >
         <action
             android:id="@+id/action_chatsFragment_to_loginFragment"
@@ -107,10 +107,11 @@
             app:popEnterAnim="@anim/fragment_fade_enter"
             app:popExitAnim="@anim/fragment_fade_exit"/>
     </fragment>
+
     <fragment
         android:id="@+id/addContactsFragment"
         android:name="com.helow.messenger.AddContactsFragment"
-        android:label="Add contacts"
+        android:label="@string/add_contacts"
         tools:layout="@layout/fragment_add_contacts" />
     <fragment
         android:id="@+id/chatFragment"
@@ -130,6 +131,6 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.helow.messenger.ProfileFragment"
-        android:label="Profile"
+        android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

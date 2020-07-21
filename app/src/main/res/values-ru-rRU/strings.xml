@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email">Эл. почта</string>
+    <string name="password">Пароль</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="login">Вход</string>
+    <string name="registered">Уже зарегистрированы?</string>
+    <string name="not_registered">Ещё не зарегистрированы?</string>
+    <string name="username">Имя пользователя</string>
+    <string name="registration">Регистрация</string>
+    <string name="log_out">Выход</string>
+    <string name="add_contacts">Добавить контакты</string>
+    <string name="type_here">Сообщение....</string>
+    <string name="update_username">Сменить имя пользователя</string>
+    <string name="profile">Профиль</string>
+    <string name="contacts">Контакты</string>
+    <string name="user_not_exists">Пользователь не существует</string>
+    <string name="wrong_password">Неверный пароль</string>
+    <string name="empty_field">Пустое поле</string>
+    <string name="user_already_exists">Пользователь уже существует</string>
+    <string name="too_weak_pasword">Слишком простой пароль</string>
+    <string name="bad_email_format">Неверный формат эл. почты</string>
+    <string name="change_locale">Сменить язык</string>
+    <string name="edit">Редактировать</string>
+    <string name="remove">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="choose_action">Выберите действие</string>
+</resources>

@@ -10,6 +10,8 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.edit
 import androidx.navigation.NavDeepLinkBuilder
@@ -25,19 +27,20 @@ class MessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-
         preferences = getSharedPreferences("notifications", Context.MODE_PRIVATE)
 
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mChannel = NotificationChannel("messages", "Messages", NotificationManager.IMPORTANCE_DEFAULT).apply {
+        val notificationManager = NotificationManagerCompat.from(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            notificationManager.createNotificationChannel(NotificationChannel("messages", "Messages", NotificationManager.IMPORTANCE_DEFAULT).apply {
                 enableVibration(true)
-            }
-            notificationManager.createNotificationChannel(mChannel)
-        }
+            })
 
+        val notificationId = preferences.getInt("notificationId", 1)
         val args = Bundle()
+        val sender = Person.Builder().setName("Me").build()
+        val receiver = Person.Builder().setName(message.data["title"]).build()
         args.putString("uid", message.data["sender"])
+        args.putInt("notificationId", notificationId)
 
         val pendingIntent = NavDeepLinkBuilder(applicationContext)
             .setGraph(R.navigation.my_nav)
@@ -45,36 +48,46 @@ class MessagingService : FirebaseMessagingService() {
             .setArguments(args)
             .createPendingIntent()
 
-        val notification = NotificationCompat.Builder(this@MessagingService, "messages").apply {
+        val notification = NotificationCompat.Builder(this, "messages").apply {
             setSmallIcon(R.drawable.baseline_message_24)
             color = Color.GREEN
-            setContentTitle(message.data["title"])
-            setContentText(message.data["content"])
             setContentIntent(pendingIntent)
             setAutoCancel(true)
         }
 
-        val notificationId = preferences.getInt("notificationId", 1)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val group = NotificationCompat.Builder(this, "messages").apply {
+                setSmallIcon(R.drawable.baseline_message_24)
+                color = Color.GREEN
+                setContentInfo(message.data["title"])
+                setGroup(message.data["sender"])
+                setGroupSummary(true)
+            }
+            notificationManager.notify(message.data["title"].hashCode(), group.build())
+            notification.setGroup(message.data["sender"])
+
             val remoteInput = RemoteInput.Builder("key_text_reply")
                 .setLabel("Type here...")
                 .build()
-            args.putInt("notificationId", notificationId)
 
-            val intent = Intent(this@MessagingService, DirectReplyReceiver::class.java)
-            intent.putExtras(args)
+            val intent = Intent(this, DirectReplyReceiver::class.java).apply {
+                putExtras(args)
+            }
 
-            val replyPendingIntent = PendingIntent.getBroadcast(this@MessagingService, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            val replyPendingIntent = PendingIntent.getBroadcast(this, notificationId, intent, 0)
 
             val action = NotificationCompat.Action.Builder(R.drawable.baseline_forward_24, "Reply", replyPendingIntent)
                 .addRemoteInput(remoteInput)
                 .build()
 
+            val style = NotificationCompat.MessagingStyle(sender)
+                .addMessage(message.data["content"], System.currentTimeMillis(), receiver)
+
             notification.addAction(action)
+            notification.setStyle(style)
         }
 
-        notificationManager.notify("message", notificationId, notification.build())
+        notificationManager.notify(notificationId, notification.build())
         preferences.edit(commit = true) {
             putInt("notificationId", notificationId + 1)
         }

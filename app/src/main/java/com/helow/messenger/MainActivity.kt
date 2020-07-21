@@ -1,5 +1,6 @@
 package com.helow.messenger
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -38,6 +39,10 @@ class MainActivity : AppCompatActivity() {
             if (destination.id != R.id.chatFragment)
                 setActionBarSubTitle(null)
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(wrapContextWithLocale(newBase))
     }
 
     override fun onSupportNavigateUp() = super.onSupportNavigateUp() || navController.navigateUp()
