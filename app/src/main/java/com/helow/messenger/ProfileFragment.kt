@@ -45,12 +45,12 @@ class ProfileFragment : Fragment() {
             val locale = preferences.getString("locale", "ru")
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.change_locale)
-                .setNegativeButton(R.string.cancel) {_, _ ->
+                .setNeutralButton(R.string.cancel) {_, _ ->
                     preferences.edit(commit = true) {
                         putString("locale", locale)
                     }
                 }
-                .setPositiveButton("OK") {_, _ ->
+                .setPositiveButton(R.string.ok) { _, _ ->
                     requireActivity().recreate()
                 }
                 .setSingleChoiceItems(availableLocales.values.toTypedArray(), availableLocales.keys.indexOf(locale)) {_, which ->

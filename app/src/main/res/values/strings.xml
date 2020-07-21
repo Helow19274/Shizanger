@@ -25,4 +25,9 @@
     <string name="remove">Remove</string>
     <string name="cancel">Cancel</string>
     <string name="choose_action">Choose action</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="remove_contact">Remove contact?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="ok">OK</string>
 </resources>

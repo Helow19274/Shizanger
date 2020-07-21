@@ -42,10 +42,10 @@ class ContactsFragment : Fragment() {
 
         fastAdapter.onLongClickListener = { _, _, item, _ ->
             MaterialAlertDialogBuilder(context)
-                .setTitle("Are you sure?")
-                .setMessage("Remove contact?")
-                .setNegativeButton("No") { _, _ -> }
-                .setPositiveButton("Yes") { _, _ ->
+                .setTitle(R.string.are_you_sure)
+                .setMessage(R.string.remove_contact)
+                .setNegativeButton(R.string.no) { _, _ -> }
+                .setPositiveButton(R.string.yes) { _, _ ->
                     model.db.getReference("users/${model.auth.uid}/contacts/${item.contactKey}").removeValue()
                 }
                 .show()

@@ -25,4 +25,9 @@
     <string name="remove">Удалить</string>
     <string name="cancel">Отмена</string>
     <string name="choose_action">Выберите действие</string>
+    <string name="are_you_sure">Вы уверены?</string>
+    <string name="remove_contact">Удалить контакт?</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="ok">Ок</string>
 </resources>
