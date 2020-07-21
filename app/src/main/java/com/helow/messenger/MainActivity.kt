@@ -41,6 +41,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (model.auth.currentUser != null)
+            model.db.getReference("users").child("${model.auth.uid}/online").setValue(true)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        intent.removeExtra(Intent.EXTRA_TEXT)
+        if (model.auth.currentUser != null)
+            model.db.getReference("users/${model.auth.uid}/online").setValue(false)
+    }
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(wrapContextWithLocale(newBase))
     }
@@ -53,18 +66,5 @@ class MainActivity : AppCompatActivity() {
 
     fun setActionBarSubTitle(title: CharSequence?) {
         supportActionBar!!.subtitle = title
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (model.auth.currentUser != null)
-            model.db.getReference("users/${model.auth.uid}/online").setValue(true)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        intent.removeExtra(Intent.EXTRA_TEXT)
-        if (model.auth.currentUser != null)
-            model.db.getReference("users/${model.auth.uid}/online").setValue(false)
     }
 }

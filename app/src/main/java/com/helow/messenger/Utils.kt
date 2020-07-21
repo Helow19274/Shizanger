@@ -21,12 +21,6 @@ import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import java.util.*
 
-operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: List<T>) {
-    val value = this.value ?: arrayListOf()
-    value.addAll(values)
-    this.value = value
-}
-
 operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: T) {
     val value = this.value ?: arrayListOf()
     value.add(values)
@@ -35,7 +29,6 @@ operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: T) {
 
 operator fun <T> MutableLiveData<ArrayList<T>>.minusAssign(values: T) {
     val uid = (values as ContactItem).user.uid
-
     val value = this.value?.filterNot { (it as ContactItem).user.uid == uid } ?: listOf()
     this.value = ArrayList(value.toMutableList())
 }

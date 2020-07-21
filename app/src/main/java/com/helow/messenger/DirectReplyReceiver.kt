@@ -11,7 +11,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class DirectReplyReceiver : BroadcastReceiver() {
-
     private val auth = Firebase.auth
     private val db = Firebase.database.getReference("messages")
 

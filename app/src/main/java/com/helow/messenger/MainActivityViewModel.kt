@@ -21,10 +21,9 @@ class MainActivityViewModel : ViewModel() {
     val contacts = MutableLiveData<ArrayList<ContactItem>>()
     private var listenersInitialized = false
 
-    fun initListeners() {
+    fun initContactsListeners() {
         if (listenersInitialized)
             return
-        listenersInitialized = true
         db.getReference("users/${auth.uid}/contacts").addChildEventListener(object : ChildEventListener {
             override fun onCancelled(error: DatabaseError) { }
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) { }
@@ -52,5 +51,6 @@ class MainActivityViewModel : ViewModel() {
                 })
             }
         })
+        listenersInitialized = true
     }
 }

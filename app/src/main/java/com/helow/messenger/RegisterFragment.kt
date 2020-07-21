@@ -22,48 +22,47 @@ class RegisterFragment : Fragment() {
     private val args: RegisterFragmentArgs by navArgs()
     private val model: MainActivityViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_register, container, false)
-        val username = view.username
-        val usernameView = view.username_view
-        val email = view.email
-        val emailView = view.email_view
-        val password = view.password
-        val passwordView = view.password_view
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_register, container, false)
 
-        email.setText(args.email)
-        password.setText(args.password)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view.email.setText(args.email)
+        view.password.setText(args.password)
 
         view.button_register.setOnClickListener {
-            if (username.text.isNullOrBlank())
-                usernameView.error = getString(R.string.empty_field)
-            if (email.text.isNullOrBlank())
-                emailView.error = getString(R.string.empty_field)
-            if (password.text.isNullOrBlank())
-                passwordView.error = getString(R.string.empty_field)
-            if (!username.text.isNullOrBlank() && !email.text.isNullOrBlank() && !password.text.isNullOrBlank())
-                signUpUser(username.text.toString(), email.text.toString(), password.text.toString())
+            if (view.username.text.isNullOrBlank())
+                view.username_view.error = getString(R.string.empty_field)
+            if (view.email.text.isNullOrBlank())
+                view.email_view.error = getString(R.string.empty_field)
+            if (view.password.text.isNullOrBlank())
+                view.password_view.error = getString(R.string.empty_field)
+            if (!view.username.text.isNullOrBlank() && !view.email.text.isNullOrBlank() && !view.password.text.isNullOrBlank()) {
+                view.button_register.isEnabled = false
+                signUpUser(view.username.text.toString(), view.email.text.toString(), view.password.text.toString())
+            }
         }
 
-        username.addTextChangedListener {
+        view.username.addTextChangedListener {
             if (it.isNullOrBlank())
-                usernameView.error = getString(R.string.empty_field)
+                view.username_view.error = getString(R.string.empty_field)
             else
-                usernameView.error = null
+                view.username_view.error = null
         }
 
-        email.addTextChangedListener {
+        view.email.addTextChangedListener {
             if (it.isNullOrBlank())
-                emailView.error = getString(R.string.empty_field)
+                view.email_view.error = getString(R.string.empty_field)
             else
-                emailView.error = null
+                view.email_view.error = null
         }
 
-        password.addTextChangedListener {
+        view.password.addTextChangedListener {
             if (it.isNullOrBlank())
-                passwordView.error = getString(R.string.empty_field)
+                view.password_view.error = getString(R.string.empty_field)
             else
-                passwordView.error = null
+                view.password_view.error = null
         }
 
         view.button_already_registered.setOnClickListener {
@@ -71,7 +70,6 @@ class RegisterFragment : Fragment() {
                 view.email.text.toString(), view.password.text.toString()
             ))
         }
-        return view
     }
 
     private fun signUpUser(username: String, email: String, password: String) {
@@ -84,6 +82,7 @@ class RegisterFragment : Fragment() {
                 findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToContactsFragment())
             } catch (e: Exception) {
                 val view = requireView()
+                view.button_register.isEnabled = true
                 when (e) {
                     is FirebaseAuthUserCollisionException -> {
                         view.email_view.error = getString(R.string.user_already_exists)

@@ -18,44 +18,40 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class LoginFragment : Fragment() {
-
     private val args: LoginFragmentArgs by navArgs()
     private val model: MainActivityViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_login, container, false)
 
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
-        val email = view.email
-        val emailView = view.email_view
-        val password = view.password
-        val passwordView = view.password_view
-
-        email.setText(args.email)
-        password.setText(args.password)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.email.setText(args.email)
+        view.password.setText(args.password)
 
         view.button_login.setOnClickListener {
-            if (email.text.isNullOrBlank())
-                emailView.error = getString(R.string.empty_field)
-            if (password.text.isNullOrBlank())
-                passwordView.error = getString(R.string.empty_field)
-            if (!email.text.isNullOrBlank() && !password.text.isNullOrBlank()) {
+            if (view.email.text.isNullOrBlank())
+                view.email_view.error = getString(R.string.empty_field)
+            if (view.password.text.isNullOrBlank())
+                view.password_view.error = getString(R.string.empty_field)
+            if (!view.email.text.isNullOrBlank() && !view.password.text.isNullOrBlank()) {
                 view.button_login.isEnabled = false
-                signInUser(email.text.toString(), password.text.toString())
+                signInUser(view.email.text.toString(), view.password.text.toString())
             }
         }
 
-        email.addTextChangedListener {
+        view.email.addTextChangedListener {
             if (it.isNullOrBlank())
-                emailView.error = getString(R.string.empty_field)
+                view.email_view.error = getString(R.string.empty_field)
             else
-                emailView.error = null
+                view.email_view.error = null
         }
 
-        password.addTextChangedListener {
+        view.password.addTextChangedListener {
             if (it.isNullOrBlank())
-                passwordView.error = getString(R.string.empty_field)
+                view.password_view.error = getString(R.string.empty_field)
             else
-                passwordView.error = null
+                view.password_view.error = null
         }
 
         view.button_not_registered.setOnClickListener {
@@ -63,8 +59,6 @@ class LoginFragment : Fragment() {
                 view.email.text.toString(), view.password.text.toString()
             ))
         }
-
-        return view
     }
 
     private fun signInUser(email: String, password: String) {
@@ -76,7 +70,7 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToContactsFragment())
             } catch (e: Exception) {
                 val view = requireView()
-                view.button_login.isEnabled = false
+                view.button_login.isEnabled = true
                 when (e) {
                     is FirebaseAuthInvalidUserException -> {
                         view.email_view.error = getString(R.string.user_not_exists)

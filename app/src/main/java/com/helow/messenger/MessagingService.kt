@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -22,12 +21,9 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 class MessagingService : FirebaseMessagingService() {
-    private val ref = Firebase.database.getReference("users/${Firebase.auth.uid}/token")
-    private lateinit var preferences: SharedPreferences
-
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        preferences = getSharedPreferences("notifications", Context.MODE_PRIVATE)
+        val preferences = getSharedPreferences("notifications", Context.MODE_PRIVATE)
 
         val notificationManager = NotificationManagerCompat.from(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -94,6 +90,6 @@ class MessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        ref.setValue(token)
+        Firebase.database.getReference("users/${Firebase.auth.uid}/token").setValue(token)
     }
 }

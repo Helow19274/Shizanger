@@ -18,7 +18,6 @@ class MessageItem(val message: MessageRec, val sent: Boolean, val messageId: Str
     override fun getViewHolder(v: View) = ViewHolder(v)
 
     class ViewHolder(view: View) : FastAdapter.ViewHolder<MessageItem>(view) {
-
         private val messageText = view.findViewById<TextView>(R.id.message_text)
         private val timestampText = view.findViewById<TextView>(R.id.timestamp)
 

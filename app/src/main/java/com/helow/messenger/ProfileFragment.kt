@@ -19,19 +19,21 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 class ProfileFragment : Fragment() {
     private val model: MainActivityViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_profile, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val preferences = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        val username = view.username
-        val usernameView = view.username_view
         var name = ""
 
-        model.db.getReference("users/${model.auth.uid}/username").addValueEventListener(viewLifecycleOwner, object : ValueEventListener {
+        model.db.getReference("users/${model.auth.uid}/username").addValueEventListener(viewLifecycleOwner, object :
+            ValueEventListener {
             override fun onCancelled(error: DatabaseError) { }
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 name = snapshot.getValue<String>()!!
-                username.setText(name)
+                view.username.setText(name)
             }
         })
 
@@ -49,23 +51,21 @@ class ProfileFragment : Fragment() {
                 }
                 .setSingleChoiceItems(availableLocales.values.toTypedArray(), availableLocales.keys.indexOf(locale)) {_, which ->
                     preferences.edit(commit = true) {
-                            putString("locale", availableLocales.keys.toList()[which])
+                        putString("locale", availableLocales.keys.toList()[which])
                     }
                 }
                 .show()
         }
 
-        username.addTextChangedListener {
+        view.username.addTextChangedListener {
             when {
-                it.isNullOrBlank() -> usernameView.error = "Field is empty"
+                it.isNullOrBlank() -> view.username_view.error = "Field is empty"
                 it.toString() == name -> view.update_button.isEnabled = false
                 else -> {
-                    usernameView.error = null
+                    view.username_view.error = null
                     view.update_button.isEnabled = true
                 }
             }
         }
-
-        return view
     }
 }

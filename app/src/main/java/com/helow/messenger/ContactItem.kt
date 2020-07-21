@@ -23,21 +23,20 @@ open class ContactItem(val user: UserRec, val contactKey: String?=null) : Abstra
     override fun getViewHolder(v: View) = ViewHolder(v)
 
     class ViewHolder(view: View) : FastAdapter.ViewHolder<ContactItem>(view) {
-        private lateinit var listener: ValueEventListener
         private val username = view.username
         private val email = view.email
         private val card = view.card
+        private val listener = object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) { }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue<UserRec>()!!
+                card.isChecked = user.online
+                username.text = user.username
+            }
+        }
 
         override fun bindView(item: ContactItem, payloads: List<Any>) {
-            listener = object : ValueEventListener {
-                override fun onCancelled(error: DatabaseError) { }
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val user = snapshot.getValue<UserRec>()!!
-                    card.isChecked = user.online
-                    username.text = user.username
-                }
-            }
             username.text = item.user.username
             email.text = item.user.email
             item.ref.addValueEventListener(listener)
