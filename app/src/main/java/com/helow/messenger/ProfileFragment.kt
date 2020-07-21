@@ -40,7 +40,7 @@ class ProfileFragment : Fragment() {
         }
 
         view.change_locale_button.setOnClickListener {
-            val locale = preferences.getString("locale", "en")
+            val locale = preferences.getString("locale", "ru")
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.change_locale)
                 .setNegativeButton(R.string.cancel) {_, _ -> }

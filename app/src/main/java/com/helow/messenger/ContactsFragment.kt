@@ -18,11 +18,6 @@ class ContactsFragment : Fragment() {
     private val adapter = ItemAdapter<ContactItem>()
     private val fastAdapter = FastAdapter.with(adapter)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        model.initListeners()
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_contacts, container, false)
         view.recycler_view.adapter = fastAdapter
@@ -32,6 +27,7 @@ class ContactsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        model.initListeners()
 
         model.contacts.observe(viewLifecycleOwner, Observer {
             adapter.set(it)

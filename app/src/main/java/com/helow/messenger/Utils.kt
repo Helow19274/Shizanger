@@ -8,7 +8,6 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -78,7 +77,7 @@ val mePerson = Person.Builder()
     .setName("Me")
     .build()
 
-val availableLocales = hashMapOf<String, String>(
+val availableLocales = hashMapOf(
     "en" to "English",
     "ru" to "Русский"
 )
@@ -117,7 +116,6 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
         .addRemoteInput(remoteInput)
         .build()
 
-    Log.d("ttt", sender.name.toString())
     val notification = NotificationCompat.Builder(context, "messages").apply {
         setSmallIcon(R.drawable.baseline_message_24)
         color = Color.GREEN
@@ -131,8 +129,7 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
 }
 
 fun wrapContextWithLocale(context: Context): Context {
-    val locale = Locale(context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("locale", "en")!!)
-    Log.d("ttt", locale.language)
+    val locale = Locale(context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("locale", "ru")!!)
     Locale.setDefault(locale)
     val config = Configuration()
     config.setLocale(locale)
@@ -141,7 +138,7 @@ fun wrapContextWithLocale(context: Context): Context {
 
 @Suppress("DEPRECATION")
 fun overrideLocale(context: Context) {
-    val locale = Locale(context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("locale", "en")!!)
+    val locale = Locale(context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("locale", "ru")!!)
     Locale.setDefault(locale)
     val config = Configuration()
     config.setLocale(locale)

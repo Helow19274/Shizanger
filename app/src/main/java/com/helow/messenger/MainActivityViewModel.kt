@@ -19,7 +19,7 @@ class MainActivityViewModel : ViewModel() {
     val instanceId = FirebaseInstanceId.getInstance()
     val messaging = FirebaseMessaging.getInstance()
     val contacts = MutableLiveData<ArrayList<ContactItem>>()
-    var listenersInitialized = false
+    private var listenersInitialized = false
 
     fun initListeners() {
         if (listenersInitialized)

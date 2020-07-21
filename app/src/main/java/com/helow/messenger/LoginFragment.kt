@@ -38,8 +38,10 @@ class LoginFragment : Fragment() {
                 emailView.error = getString(R.string.empty_field)
             if (password.text.isNullOrBlank())
                 passwordView.error = getString(R.string.empty_field)
-            if (!email.text.isNullOrBlank() && !password.text.isNullOrBlank())
+            if (!email.text.isNullOrBlank() && !password.text.isNullOrBlank()) {
+                view.button_login.isEnabled = false
                 signInUser(email.text.toString(), password.text.toString())
+            }
         }
 
         email.addTextChangedListener {
@@ -74,6 +76,7 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToContactsFragment())
             } catch (e: Exception) {
                 val view = requireView()
+                view.button_login.isEnabled = false
                 when (e) {
                     is FirebaseAuthInvalidUserException -> {
                         view.email_view.error = getString(R.string.user_not_exists)
