@@ -87,34 +87,38 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
 
     newStyle.addMessage(message, System.currentTimeMillis(), sender)
 
-    val pendingIntent = NavDeepLinkBuilder(context)
-        .setGraph(R.navigation.my_nav)
-        .setDestination(R.id.chatFragment)
-        .setArguments(args)
-        .createPendingIntent()
+    val pendingIntent = NavDeepLinkBuilder(context).run {
+        setGraph(R.navigation.my_nav)
+        setDestination(R.id.chatFragment)
+        setArguments(args)
+        createPendingIntent()
+    }
 
-    val remoteInput = RemoteInput.Builder("key_text_reply")
-        .setLabel(context.getString(R.string.type_here))
-        .build()
+    val remoteInput = RemoteInput.Builder("key_text_reply").run {
+        setLabel(context.getString(R.string.type_here))
+        build()
+    }
 
     val intent = Intent(context, DirectReplyReceiver::class.java)
     intent.putExtras(args)
 
     val replyPendingIntent = PendingIntent.getBroadcast(context, notificationId, intent, 0)
 
-    val action = NotificationCompat.Action.Builder(R.drawable.baseline_forward_24, context.getString(R.string.reply), replyPendingIntent)
-        .addRemoteInput(remoteInput)
-        .build()
+    val action = NotificationCompat.Action.Builder(R.drawable.baseline_forward_24, context.getString(R.string.reply), replyPendingIntent).run {
+        addRemoteInput(remoteInput)
+        build()
+    }
 
-    val notification = NotificationCompat.Builder(context, "messages").apply {
+    val notification = NotificationCompat.Builder(context, "messages").run {
         setSmallIcon(R.drawable.baseline_message_24)
         color = Color.GREEN
         setContentIntent(pendingIntent)
         setAutoCancel(true)
         addAction(action)
         setStyle(newStyle)
+        build()
     }
-    NotificationManagerCompat.from(context).notify(notificationId, notification.build())
+    NotificationManagerCompat.from(context).notify(notificationId, notification)
 }
 
 fun wrapContextWithLocale(context: Context): Context {

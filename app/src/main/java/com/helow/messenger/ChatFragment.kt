@@ -106,15 +106,6 @@ class ChatFragment : Fragment() {
             }
         })
 
-        chatRef.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) { }
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                lastKey = snapshot.children.firstOrNull()?.key
-                addNewMessagesListener()
-            }
-        })
-
         view.send_button.setOnClickListener {
             val chunks = view.message.text!!.chunked(2048)
             lifecycleScope.launch {
@@ -139,6 +130,15 @@ class ChatFragment : Fragment() {
             view.message.append(beforeEditText)
             beforeEditText = ""
         }
+
+        chatRef.orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) { }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                lastKey = snapshot.children.firstOrNull()?.key
+                addNewMessagesListener()
+            }
+        })
 
         if (args.messageFromShare != null) {
             view.message.append(args.messageFromShare)

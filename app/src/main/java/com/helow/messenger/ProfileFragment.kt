@@ -1,6 +1,7 @@
 package com.helow.messenger
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,25 +42,28 @@ class ProfileFragment : Fragment() {
             model.db.getReference("users/${model.auth.uid}/username").setValue(view.username.text.toString())
         }
 
-        view.change_locale_button.setOnClickListener {
-            val locale = preferences.getString("locale", "ru")
-            MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.change_locale)
-                .setNeutralButton(R.string.cancel) {_, _ ->
-                    preferences.edit(commit = true) {
-                        putString("locale", locale)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
+            view.change_locale_button.visibility = View.GONE
+        else
+            view.change_locale_button.setOnClickListener {
+                val locale = preferences.getString("locale", "ru")
+                MaterialAlertDialogBuilder(context)
+                    .setTitle(R.string.change_locale)
+                    .setNeutralButton(R.string.cancel) {_, _ ->
+                        preferences.edit(commit = true) {
+                            putString("locale", locale)
+                        }
                     }
-                }
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    requireActivity().recreate()
-                }
-                .setSingleChoiceItems(availableLocales.values.toTypedArray(), availableLocales.keys.indexOf(locale)) {_, which ->
-                    preferences.edit(commit = true) {
-                        putString("locale", availableLocales.keys.toList()[which])
+                    .setPositiveButton(R.string.ok) { _, _ ->
+                        requireActivity().recreate()
                     }
-                }
-                .show()
-        }
+                    .setSingleChoiceItems(availableLocales.values.toTypedArray(), availableLocales.keys.indexOf(locale)) {_, which ->
+                        preferences.edit(commit = true) {
+                            putString("locale", availableLocales.keys.toList()[which])
+                        }
+                    }
+                    .show()
+            }
 
         view.username.addTextChangedListener {
             when {

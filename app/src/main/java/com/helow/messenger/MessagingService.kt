@@ -41,19 +41,23 @@ class MessagingService : FirebaseMessagingService() {
         else {
             val preferences = getSharedPreferences("notifications", Context.MODE_PRIVATE)
             val notificationId = preferences.getInt("notificationId", 1)
-            val pendingIntent = NavDeepLinkBuilder(applicationContext)
-                .setGraph(R.navigation.my_nav)
-                .setDestination(R.id.chatFragment)
-                .setArguments(args)
-                .createPendingIntent()
+            val pendingIntent = NavDeepLinkBuilder(this).run {
+                setGraph(R.navigation.my_nav)
+                setDestination(R.id.chatFragment)
+                setArguments(args)
+                createPendingIntent()
+            }
 
-            val notification = NotificationCompat.Builder(this, "messages").apply {
+            val notification = NotificationCompat.Builder(this, "messages").run {
                 setSmallIcon(R.drawable.baseline_message_24)
                 color = Color.GREEN
+                setContentTitle(message.data["title"])
+                setContentText(message.data["content"])
                 setContentIntent(pendingIntent)
                 setAutoCancel(true)
+                build()
             }
-            notificationManager.notify(notificationId, notification.build())
+            notificationManager.notify(notificationId, notification)
             preferences.edit(commit = true) {
                 putInt("notificationId", notificationId + 1)
             }
