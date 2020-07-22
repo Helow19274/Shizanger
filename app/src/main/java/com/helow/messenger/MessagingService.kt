@@ -5,11 +5,11 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
-import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.content.edit
+import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
@@ -18,6 +18,10 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 class MessagingService : FirebaseMessagingService() {
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(wrapContextWithLocale(newBase))
+    }
+
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
@@ -27,8 +31,7 @@ class MessagingService : FirebaseMessagingService() {
                 enableVibration(true)
             })
 
-        val args = Bundle()
-        args.putString("uid", message.data["sender"])
+        val args = bundleOf("uid" to message.data["sender"])
         val sender = Person.Builder()
             .setName(message.data["title"])
             .build()
