@@ -18,7 +18,7 @@
     <string name="wrong_password">Неверный пароль</string>
     <string name="empty_field">Пустое поле</string>
     <string name="user_already_exists">Пользователь уже существует</string>
-    <string name="too_weak_pasword">Слишком простой пароль</string>
+    <string name="too_weak_password">Слишком простой пароль</string>
     <string name="bad_email_format">Неверный формат эл. почты</string>
     <string name="change_locale">Сменить язык</string>
     <string name="edit">Редактировать</string>
@@ -30,4 +30,5 @@
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="ok">Ок</string>
+    <string name="reply">Ответить</string>
 </resources>

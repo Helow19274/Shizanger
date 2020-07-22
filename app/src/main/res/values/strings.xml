@@ -18,7 +18,7 @@
     <string name="wrong_password">Wrong password</string>
     <string name="empty_field">Field is empty</string>
     <string name="user_already_exists">User already exists</string>
-    <string name="too_weak_pasword">Password is too weak</string>
+    <string name="too_weak_password">Password is too weak</string>
     <string name="bad_email_format">Bad email format</string>
     <string name="change_locale">Change locale</string>
     <string name="edit">Edit</string>
@@ -30,4 +30,5 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="ok">OK</string>
+    <string name="reply">Reply</string>
 </resources>

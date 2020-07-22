@@ -63,7 +63,7 @@ class ProfileFragment : Fragment() {
 
         view.username.addTextChangedListener {
             when {
-                it.isNullOrBlank() -> view.username_view.error = "Field is empty"
+                it.isNullOrBlank() -> view.username_view.error = getString(R.string.empty_field)
                 it.toString() == name -> view.update_button.isEnabled = false
                 else -> {
                     view.username_view.error = null

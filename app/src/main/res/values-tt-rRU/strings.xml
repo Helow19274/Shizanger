@@ -18,7 +18,7 @@
     <string name="wrong_password">Невѣрный шифръ</string>
     <string name="empty_field">Пустая строка</string>
     <string name="user_already_exists">Участникъ уже есть</string>
-    <string name="too_weak_pasword">Шифръ слишкомъ простъ</string>
+    <string name="too_weak_password">Шифръ слишкомъ простъ</string>
     <string name="bad_email_format">Неправильный видъ почты</string>
     <string name="change_locale">Смѣнить языкъ</string>
     <string name="edit">Редактировать</string>
@@ -30,4 +30,5 @@
     <string name="no">Нѣтъ</string>
     <string name="yes">Да</string>
     <string name="ok">Выбрать</string>
+    <string name="reply">Отвѣтить</string>
 </resources>

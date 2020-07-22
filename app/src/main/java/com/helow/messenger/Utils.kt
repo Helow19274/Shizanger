@@ -66,29 +66,25 @@ fun Query.addChildEventListener(lifecycleOwner: LifecycleOwner, listener: ChildE
     })
 }
 
-val mePerson = Person.Builder()
-    .setName("Me")
-    .build()
-
 val availableLocales = sortedMapOf(
     "en" to "English",
     "ru" to "Русский",
     "tt" to "Русскій(дореволюціонный)"
 )
 
-@RequiresApi(Build.VERSION_CODES.M)
-fun findActiveNotification(context: Context, notificationId: Int) =
-    (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-        .activeNotifications.find { it.id == notificationId }?.notification
-
 @RequiresApi(Build.VERSION_CODES.N)
 fun addReply(context: Context, message: CharSequence, notificationId: Int, sender: Person, args: Bundle) {
-    val activeNotification = findActiveNotification(context, notificationId) ?: return
-    val activeStyle = NotificationCompat.MessagingStyle.extractMessagingStyleFromNotification(activeNotification)!!
-    val newStyle = NotificationCompat.MessagingStyle(mePerson)
-    activeStyle.messages.forEach {
-        newStyle.addMessage(NotificationCompat.MessagingStyle.Message(it.text, it.timestamp, it.person))
+    val notificationManager = context.getSystemService(NotificationManager::class.java)
+    val newStyle = NotificationCompat.MessagingStyle(sender)
+
+    val activeNotification = notificationManager.activeNotifications.find { it.id == notificationId }?.notification
+    if (activeNotification != null) {
+        val activeStyle = NotificationCompat.MessagingStyle.extractMessagingStyleFromNotification(activeNotification)!!
+        activeStyle.messages.forEach {
+            newStyle.addMessage(NotificationCompat.MessagingStyle.Message(it.text, it.timestamp, it.person))
+        }
     }
+
     newStyle.addMessage(message, System.currentTimeMillis(), sender)
 
     val pendingIntent = NavDeepLinkBuilder(context)
@@ -98,7 +94,7 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
         .createPendingIntent()
 
     val remoteInput = RemoteInput.Builder("key_text_reply")
-        .setLabel("Type here...")
+        .setLabel(context.getString(R.string.type_here))
         .build()
 
     val intent = Intent(context, DirectReplyReceiver::class.java)
@@ -106,7 +102,7 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
 
     val replyPendingIntent = PendingIntent.getBroadcast(context, notificationId, intent, 0)
 
-    val action = NotificationCompat.Action.Builder(R.drawable.baseline_forward_24, "Reply", replyPendingIntent)
+    val action = NotificationCompat.Action.Builder(R.drawable.baseline_forward_24, context.getString(R.string.reply), replyPendingIntent)
         .addRemoteInput(remoteInput)
         .build()
 
@@ -117,7 +113,6 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
         setAutoCancel(true)
         addAction(action)
         setStyle(newStyle)
-        setGroup(args.getString("uid"))
     }
     NotificationManagerCompat.from(context).notify(notificationId, notification.build())
 }
@@ -137,7 +132,6 @@ fun overrideLocale(context: Context) {
     val config = Configuration()
     config.setLocale(locale)
     context.resources.updateConfiguration(config, context.resources.displayMetrics)
-    if (context != context.applicationContext) {
+    if (context != context.applicationContext)
         context.applicationContext.resources.run { updateConfiguration(config, displayMetrics) }
-    }
 }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.Person
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -18,11 +19,14 @@ class DirectReplyReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val data = RemoteInput.getResultsFromIntent(intent)
         if (data != null) {
+            val person = Person.Builder()
+                .setName("Me")
+                .build()
             val result = goAsync()
             val toUid = intent.getStringExtra("uid")!!
             val chatId = if (auth.uid!! < toUid) "${auth.uid}-${toUid}" else "${toUid}-${auth.uid}"
             db.child(chatId).push().setValue(Message(auth.uid!!, toUid, data.getCharSequence("key_text_reply").toString())).addOnSuccessListener {
-                addReply(context, data.getCharSequence("key_text_reply").toString(), intent.getIntExtra("notificationId", 0), mePerson, intent.extras!!)
+                addReply(context, data.getCharSequence("key_text_reply").toString(), toUid.hashCode(), person, intent.extras!!)
                 result.finish()
             }
         }

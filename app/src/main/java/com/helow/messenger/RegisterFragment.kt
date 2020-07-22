@@ -90,7 +90,7 @@ class RegisterFragment : Fragment() {
                     }
                     is FirebaseAuthWeakPasswordException -> {
                         view.email_view.error = null
-                        view.password_view.error = getString(R.string.too_weak_pasword)
+                        view.password_view.error = getString(R.string.too_weak_password)
                     }
                     is FirebaseAuthInvalidCredentialsException -> {
                         view.email_view.error = getString(R.string.bad_email_format)
