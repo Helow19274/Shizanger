@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import kotlinx.android.synthetic.main.fragment_register.view.*
+import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -28,46 +28,46 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.email.setText(args.email)
-        view.password.setText(args.password)
+        email.setText(args.email)
+        password.setText(args.password)
 
-        view.button_register.setOnClickListener {
-            if (view.username.text.isNullOrBlank())
-                view.username_view.error = getString(R.string.empty_field)
-            if (view.email.text.isNullOrBlank())
-                view.email_view.error = getString(R.string.empty_field)
-            if (view.password.text.isNullOrBlank())
-                view.password_view.error = getString(R.string.empty_field)
-            if (!view.username.text.isNullOrBlank() && !view.email.text.isNullOrBlank() && !view.password.text.isNullOrBlank()) {
-                view.button_register.isEnabled = false
-                signUpUser(view.username.text.toString(), view.email.text.toString(), view.password.text.toString())
+        button_register.setOnClickListener {
+            if (username.text.isNullOrBlank())
+                username_view.error = getString(R.string.empty_field)
+            if (email.text.isNullOrBlank())
+                email_view.error = getString(R.string.empty_field)
+            if (password.text.isNullOrBlank())
+                password_view.error = getString(R.string.empty_field)
+            if (!username.text.isNullOrBlank() && !email.text.isNullOrBlank() && !password.text.isNullOrBlank()) {
+                button_register.isEnabled = false
+                signUpUser(username.text.toString(), email.text.toString(), password.text.toString())
             }
         }
 
-        view.username.addTextChangedListener {
+        username.addTextChangedListener {
             if (it.isNullOrBlank())
-                view.username_view.error = getString(R.string.empty_field)
+                username_view.error = getString(R.string.empty_field)
             else
-                view.username_view.error = null
+                username_view.error = null
         }
 
-        view.email.addTextChangedListener {
+        email.addTextChangedListener {
             if (it.isNullOrBlank())
-                view.email_view.error = getString(R.string.empty_field)
+                email_view.error = getString(R.string.empty_field)
             else
-                view.email_view.error = null
+                email_view.error = null
         }
 
-        view.password.addTextChangedListener {
+        password.addTextChangedListener {
             if (it.isNullOrBlank())
-                view.password_view.error = getString(R.string.empty_field)
+                password_view.error = getString(R.string.empty_field)
             else
-                view.password_view.error = null
+                password_view.error = null
         }
 
-        view.button_already_registered.setOnClickListener {
+        button_already_registered.setOnClickListener {
             findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(
-                view.email.text.toString(), view.password.text.toString()
+                email.text.toString(), password.text.toString()
             ))
         }
     }
@@ -82,19 +82,19 @@ class RegisterFragment : Fragment() {
                 findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToContactsFragment())
             } catch (e: Exception) {
                 val view = requireView()
-                view.button_register.isEnabled = true
+                button_register.isEnabled = true
                 when (e) {
                     is FirebaseAuthUserCollisionException -> {
-                        view.email_view.error = getString(R.string.user_already_exists)
-                        view.password_view.error = null
+                        email_view.error = getString(R.string.user_already_exists)
+                        password_view.error = null
                     }
                     is FirebaseAuthWeakPasswordException -> {
-                        view.email_view.error = null
-                        view.password_view.error = getString(R.string.too_weak_password)
+                        email_view.error = null
+                        password_view.error = getString(R.string.too_weak_password)
                     }
                     is FirebaseAuthInvalidCredentialsException -> {
-                        view.email_view.error = getString(R.string.bad_email_format)
-                        view.password_view.error = null
+                        email_view.error = getString(R.string.bad_email_format)
+                        password_view.error = null
                     }
                     else -> Snackbar.make(view, "Unexpected error occurred: ${e.localizedMessage}", Snackbar.LENGTH_SHORT).show()
                 }

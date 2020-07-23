@@ -12,10 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import kotlinx.android.synthetic.main.fragment_profile.view.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
     private val model: MainActivityViewModel by viewModels()
@@ -28,24 +26,21 @@ class ProfileFragment : Fragment() {
         val preferences = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
         var name = ""
 
-        model.db.getReference("users/${model.auth.uid}/username").addValueEventListener(viewLifecycleOwner, object :
-            ValueEventListener {
-            override fun onCancelled(error: DatabaseError) { }
-
+        model.db.getReference("users/${model.auth.uid}/username").addValueEventListener(viewLifecycleOwner, object : MyValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 name = snapshot.getValue<String>()!!
-                view.username.setText(name)
+                username.setText(name)
             }
         })
 
-        view.update_button.setOnClickListener {
-            model.db.getReference("users/${model.auth.uid}/username").setValue(view.username.text.toString())
+        update_button.setOnClickListener {
+            model.db.getReference("users/${model.auth.uid}/username").setValue(username.text.toString())
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
-            view.change_locale_button.visibility = View.GONE
+            change_locale_button.visibility = View.GONE
         else
-            view.change_locale_button.setOnClickListener {
+            change_locale_button.setOnClickListener {
                 val locale = preferences.getString("locale", "ru")
                 MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.change_locale)
@@ -65,13 +60,13 @@ class ProfileFragment : Fragment() {
                     .show()
             }
 
-        view.username.addTextChangedListener {
+        username.addTextChangedListener {
             when {
-                it.isNullOrBlank() -> view.username_view.error = getString(R.string.empty_field)
-                it.toString() == name -> view.update_button.isEnabled = false
+                it.isNullOrBlank() -> username_view.error = getString(R.string.empty_field)
+                it.toString() == name -> update_button.isEnabled = false
                 else -> {
-                    view.username_view.error = null
-                    view.update_button.isEnabled = true
+                    username_view.error = null
+                    update_button.isEnabled = true
                 }
             }
         }

@@ -15,10 +15,7 @@ import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.lifecycle.*
 import androidx.navigation.NavDeepLinkBuilder
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.Query
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import java.util.*
 
 operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: T) {
@@ -104,13 +101,13 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
 
     val replyPendingIntent = PendingIntent.getBroadcast(context, notificationId, intent, 0)
 
-    val action = NotificationCompat.Action.Builder(R.drawable.baseline_forward_24, context.getString(R.string.reply), replyPendingIntent).run {
+    val action = NotificationCompat.Action.Builder(R.drawable.forward, context.getString(R.string.reply), replyPendingIntent).run {
         addRemoteInput(remoteInput)
         build()
     }
 
     val notification = NotificationCompat.Builder(context, "messages").run {
-        setSmallIcon(R.drawable.baseline_message_24)
+        setSmallIcon(R.drawable.message)
         color = Color.GREEN
         setContentIntent(pendingIntent)
         setAutoCancel(true)
@@ -138,4 +135,16 @@ fun overrideLocale(context: Context) {
     context.resources.updateConfiguration(config, context.resources.displayMetrics)
     if (context != context.applicationContext)
         context.applicationContext.resources.run { updateConfiguration(config, displayMetrics) }
+}
+
+interface MyChildEventListener : ChildEventListener {
+    override fun onCancelled(error: DatabaseError) { }
+    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) { }
+    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { }
+    override fun onChildRemoved(snapshot: DataSnapshot) { }
+    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) { }
+}
+
+interface MyValueEventListener : ValueEventListener {
+    override fun onCancelled(error: DatabaseError) { }
 }

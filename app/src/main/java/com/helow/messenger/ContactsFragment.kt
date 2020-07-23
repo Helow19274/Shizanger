@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
-import kotlinx.android.synthetic.main.fragment_contacts.view.*
+import kotlinx.android.synthetic.main.fragment_contacts.*
 import kotlin.concurrent.thread
 
 class ContactsFragment : Fragment() {
@@ -27,7 +27,7 @@ class ContactsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.recycler_view.adapter = fastAdapter
+        recycler_view.adapter = fastAdapter
         model.initContactsListeners()
 
         model.contacts.observe(viewLifecycleOwner, Observer {

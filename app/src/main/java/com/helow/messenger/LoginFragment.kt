@@ -13,7 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import kotlinx.android.synthetic.main.fragment_login.view.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -26,37 +26,37 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.email.setText(args.email)
-        view.password.setText(args.password)
+        email.setText(args.email)
+        password.setText(args.password)
 
-        view.button_login.setOnClickListener {
-            if (view.email.text.isNullOrBlank())
-                view.email_view.error = getString(R.string.empty_field)
-            if (view.password.text.isNullOrBlank())
-                view.password_view.error = getString(R.string.empty_field)
-            if (!view.email.text.isNullOrBlank() && !view.password.text.isNullOrBlank()) {
-                view.button_login.isEnabled = false
-                signInUser(view.email.text.toString(), view.password.text.toString())
+        button_login.setOnClickListener {
+            if (email.text.isNullOrBlank())
+                email_view.error = getString(R.string.empty_field)
+            if (password.text.isNullOrBlank())
+                password_view.error = getString(R.string.empty_field)
+            if (!email.text.isNullOrBlank() && !password.text.isNullOrBlank()) {
+                button_login.isEnabled = false
+                signInUser(email.text.toString(), password.text.toString())
             }
         }
 
-        view.email.addTextChangedListener {
+        email.addTextChangedListener {
             if (it.isNullOrBlank())
-                view.email_view.error = getString(R.string.empty_field)
+                email_view.error = getString(R.string.empty_field)
             else
-                view.email_view.error = null
+                email_view.error = null
         }
 
-        view.password.addTextChangedListener {
+        password.addTextChangedListener {
             if (it.isNullOrBlank())
-                view.password_view.error = getString(R.string.empty_field)
+                password_view.error = getString(R.string.empty_field)
             else
-                view.password_view.error = null
+                password_view.error = null
         }
 
-        view.button_not_registered.setOnClickListener {
+        button_not_registered.setOnClickListener {
             findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment(
-                view.email.text.toString(), view.password.text.toString()
+                email.text.toString(), password.text.toString()
             ))
         }
     }
@@ -70,15 +70,15 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToContactsFragment())
             } catch (e: Exception) {
                 val view = requireView()
-                view.button_login.isEnabled = true
+                button_login.isEnabled = true
                 when (e) {
                     is FirebaseAuthInvalidUserException -> {
-                        view.email_view.error = getString(R.string.user_not_exists)
-                        view.password_view.error = null
+                        email_view.error = getString(R.string.user_not_exists)
+                        password_view.error = null
                     }
                     is FirebaseAuthInvalidCredentialsException -> {
-                        view.email_view.error = null
-                        view.password_view.error = getString(R.string.wrong_password)
+                        email_view.error = null
+                        password_view.error = getString(R.string.wrong_password)
                     }
                     else -> Snackbar.make(view, "Unexpected error occurred: ${e.localizedMessage}", Snackbar.LENGTH_SHORT).show()
                 }

@@ -2,14 +2,15 @@ package com.helow.messenger
 
 import android.view.View
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.user_item.view.*
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 open class ContactItem(val user: UserRec, val contactKey: String?=null) : AbstractItem<ContactItem.ViewHolder>() {
     val ref = Firebase.database.getReference("users/${user.uid}")
@@ -25,13 +26,17 @@ open class ContactItem(val user: UserRec, val contactKey: String?=null) : Abstra
     class ViewHolder(view: View) : FastAdapter.ViewHolder<ContactItem>(view) {
         private val username = view.username
         private val email = view.email
-        private val card = view.card
-        private val listener = object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) { }
-
+        private val lastSeen = view.last_seen
+        private val listener = object : MyValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue<UserRec>()!!
-                card.isChecked = user.online
+                lastSeen.text = if (user.online)
+                    username.context.getString(R.string.online)
+                else
+                    username.context.getString(R.string.last_seen, DateTimeFormatter
+                        .ofPattern(username.context.getString(R.string.last_seen_pattern))
+                        .withZone(ZoneId.systemDefault())
+                        .format(Instant.ofEpochMilli(user.lastSeen)))
                 username.text = user.username
             }
         }
@@ -45,6 +50,7 @@ open class ContactItem(val user: UserRec, val contactKey: String?=null) : Abstra
         override fun unbindView(item: ContactItem) {
             username.text = null
             email.text = null
+            lastSeen.text = null
             item.ref.removeEventListener(listener)
         }
     }

@@ -28,7 +28,7 @@
         android:layout_marginBottom="4dp"
         android:hint="@string/type_here"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/send_button"
+        app:layout_constraintEnd_toStartOf="@+id/attach_button"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -40,7 +40,6 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cancel_edit_button"
-        android:visibility="gone"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_marginBottom="8dp"
@@ -48,12 +47,31 @@
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
-        app:icon="@drawable/baseline_clear_24"
+        android:visibility="gone"
+        app:icon="@drawable/clear"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:layout_constraintBottom_toTopOf="@+id/send_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/message_view" />
+        app:layout_constraintStart_toEndOf="@+id/attach_button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/attach_button"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:icon="@drawable/attach_file"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/send_button"
+        app:layout_constraintTop_toTopOf="@+id/message_view" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/send_button"
@@ -67,10 +85,11 @@
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
-        app:icon="@drawable/baseline_send_24"
+        app:icon="@drawable/send"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/message_view" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

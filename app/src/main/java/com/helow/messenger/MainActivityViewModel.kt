@@ -3,10 +3,7 @@ package com.helow.messenger
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.iid.FirebaseInstanceId
@@ -24,29 +21,21 @@ class MainActivityViewModel : ViewModel() {
     fun initContactsListeners() {
         if (listenersInitialized)
             return
-        db.getReference("users/${auth.uid}/contacts").addChildEventListener(object : ChildEventListener {
-            override fun onCancelled(error: DatabaseError) { }
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) { }
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { }
-
-            override fun onChildAdded(snapshot2: DataSnapshot, previousChildName: String?) {
-                val data = snapshot2.getValue<String>()!!
-                db.getReference("users/$data").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) { }
-
+        db.getReference("users/${auth.uid}/contacts").addChildEventListener(object : MyChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val key = snapshot.key
+                db.getReference("users/${snapshot.getValue<String>()!!}").addListenerForSingleValueEvent(object : MyValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        contacts += ContactItem(snapshot.getValue<UserRec>()!!, snapshot2.key)
+                        contacts += ContactItem(snapshot.getValue<UserRec>()!!, key)
                     }
                 })
             }
 
-            override fun onChildRemoved(snapshot2: DataSnapshot) {
-                val data = snapshot2.getValue<String>()!!
-                db.getReference("users/$data").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) { }
-
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                val key = snapshot.key
+                db.getReference("users/${snapshot.getValue<String>()!!}").addListenerForSingleValueEvent(object : MyValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        contacts -= ContactItem(snapshot.getValue<UserRec>()!!, snapshot2.key)
+                        contacts -= ContactItem(snapshot.getValue<UserRec>()!!, key)
                     }
                 })
             }

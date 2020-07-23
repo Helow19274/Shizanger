@@ -8,6 +8,7 @@ data class Message(
     val from: String = "",
     val to: String = "",
     val text: String = "",
+    val imageUrl: String = "",
     val timestamp: Map<String, String> = ServerValue.TIMESTAMP
 )
 
@@ -16,5 +17,6 @@ data class MessageRec(
     val from: String = "",
     val to: String = "",
     val text: String = "",
+    val imageUrl: String = "",
     val timestamp: Long = 0
 )

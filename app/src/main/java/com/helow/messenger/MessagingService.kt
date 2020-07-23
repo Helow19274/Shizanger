@@ -36,8 +36,13 @@ class MessagingService : FirebaseMessagingService() {
             .setName(message.data["title"])
             .build()
 
+        val text = if (message.data["content"]!!.isNotEmpty())
+            message.data["content"]!!
+        else
+            wrapContextWithLocale(this).getString(R.string.picture)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            addReply(this, message.data["content"]!!, message.data["sender"].hashCode(), sender, args)
+            addReply(this, text, message.data["sender"].hashCode(), sender, args)
         else {
             val preferences = getSharedPreferences("notifications", Context.MODE_PRIVATE)
             val notificationId = preferences.getInt("notificationId", 1)
@@ -49,10 +54,10 @@ class MessagingService : FirebaseMessagingService() {
             }
 
             val notification = NotificationCompat.Builder(this, "messages").run {
-                setSmallIcon(R.drawable.baseline_message_24)
+                setSmallIcon(R.drawable.message)
                 color = Color.GREEN
                 setContentTitle(message.data["title"])
-                setContentText(message.data["content"])
+                setContentText(text)
                 setContentIntent(pendingIntent)
                 setAutoCancel(true)
                 build()
