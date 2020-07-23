@@ -39,9 +39,10 @@ class MessageItem(val message: MessageRec, val sent: Boolean, val messageId: Str
                 .ofPattern("d.MM HH:mm")
                 .withZone(ZoneId.systemDefault())
                 .format(Instant.ofEpochMilli(item.message.timestamp))
-            if (item.message.imageUrl.isNotEmpty())
+            if (item.message.imageUrl != null)
                 Glide.with(image)
                     .load(item.message.imageUrl)
+                    .dontAnimate()
                     .into(image)
             else
                 image.setImageDrawable(null)

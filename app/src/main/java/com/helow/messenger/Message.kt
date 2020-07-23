@@ -7,8 +7,8 @@ import com.google.firebase.database.ServerValue
 data class Message(
     val from: String = "",
     val to: String = "",
-    val text: String = "",
-    val imageUrl: String = "",
+    val text: String? = null,
+    val imageUrl: String? = null,
     val timestamp: Map<String, String> = ServerValue.TIMESTAMP,
     val seen: Boolean = false
 )
@@ -17,8 +17,8 @@ data class Message(
 data class MessageRec(
     val from: String = "",
     val to: String = "",
-    val text: String = "",
-    val imageUrl: String = "",
+    val text: String? = null,
+    val imageUrl: String? = null,
     val timestamp: Long = 0,
     val seen: Boolean = false
 )

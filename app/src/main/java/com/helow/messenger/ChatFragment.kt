@@ -71,13 +71,14 @@ class ChatFragment : Fragment() {
                         0 -> {
                             editId = item.messageId
                             beforeEditText = message.text.toString()
-                            if (item.message.imageUrl.isNotEmpty())
+                            if (item.message.imageUrl != null)
                                 imageUri = item.message.imageUrl.toUri()
                             if (imageUri != null)
                                 attach_button.setIconResource(R.drawable.file_attached)
                             message.apply {
                                 text?.clear()
-                                append(item.message.text)
+                                if (item.message.text != null)
+                                    append(item.message.text)
                                 requestFocus()
                                 postDelayed({
                                     imm.showSoftInput(message, InputMethodManager.SHOW_IMPLICIT)
@@ -126,7 +127,7 @@ class ChatFragment : Fragment() {
             val chunks = message.text.toString().chunked(2048)
             lifecycleScope.launch {
                 if (chunks.isEmpty())
-                    sendMessage(args.uid, "")
+                    sendMessage(args.uid, null)
                 else
                     for (chunk in chunks)
                         sendMessage(args.uid, chunk)
@@ -206,9 +207,9 @@ class ChatFragment : Fragment() {
         }
     }
 
-    private suspend fun sendMessage(to: String, text: String) {
+    private suspend fun sendMessage(to: String, text: String?) {
         send_button.isEnabled = false
-        var url = ""
+        var url: String? = null
         if (imageUri != null) {
             url = if (imageUri!!.host == "firebasestorage.googleapis.com")
                 imageUri.toString()
@@ -219,7 +220,7 @@ class ChatFragment : Fragment() {
                 ref.downloadUrl.await().toString()
             }
         }
-        val messageText = text.trim()
+        val messageText = text?.trim()
         if (editId == "") {
             chatRef.push().setValue(Message(model.auth.uid!!, to, messageText, url)).await()
             imageUri = null
@@ -255,7 +256,7 @@ class ChatFragment : Fragment() {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val value = snapshot.getValue<MessageRec>()!!
                 val message = messages[snapshot.key!!]!!
-                if (value.text == message.message.text && value.seen == message.message.seen)
+                if ((message.sent && value.text == message.message.text && value.seen == message.message.seen && value.imageUrl == message.message.imageUrl) || (!message.sent && value.text == message.message.text && value.imageUrl == message.message.imageUrl))
                     return
                 messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!, chatRef)
                 adapter.set(messages.toSortedMap().values.reversed())
@@ -294,7 +295,7 @@ class ChatFragment : Fragment() {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val value = snapshot.getValue<MessageRec>()!!
                 val message = messages[snapshot.key!!]!!
-                if (value.text == message.message.text && value.seen == message.message.seen)
+                if ((message.sent && value.text == message.message.text && value.seen == message.message.seen && value.imageUrl == message.message.imageUrl) || (!message.sent && value.text == message.message.text && value.imageUrl == message.message.imageUrl))
                     return
                 messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!, chatRef)
                 adapter.set(messages.toSortedMap().values.reversed())
