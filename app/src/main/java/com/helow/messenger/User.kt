@@ -11,7 +11,8 @@ data class User(
     val contacts: HashMap<String, String> = hashMapOf(),
     val online: Boolean = true,
     val lastSeen: Map<String, String>? = null,
-    val inChatWith: String? = null
+    val inChatWith: String? = null,
+    val typing: String? = null
 )
 
 @Keep
@@ -23,5 +24,6 @@ data class UserRec(
     val contacts: HashMap<String, String> = hashMapOf(),
     val online: Boolean = true,
     val lastSeen: Long = 0,
-    val inChatWith: String? = null
+    val inChatWith: String? = null,
+    val typing: String? = null
 )

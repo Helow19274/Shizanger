@@ -36,4 +36,6 @@
     <string name="online">Online</string>
     <string name="last_seen">Last seen %1$s</string>
     <string name="last_seen_pattern">d.MM \'at\' HH:mm</string>
+    <string name="seen_status">Seen status</string>
+    <string name="typing">Typing…</string>
 </resources>

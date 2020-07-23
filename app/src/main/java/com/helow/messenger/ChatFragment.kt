@@ -32,6 +32,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.concurrent.schedule
 
 class ChatFragment : Fragment() {
     private val model: MainActivityViewModel by viewModels()
@@ -45,6 +46,7 @@ class ChatFragment : Fragment() {
     private var lastKey: String? = null
     private var loaded = 0
     private var imageUri: Uri? = null
+    private var typing = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_chat, container, false)
@@ -53,7 +55,6 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val activity = (requireActivity() as MainActivity)
 
-        NotificationManagerCompat.from(requireContext()).cancel(args.uid.hashCode())
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         chatRef = model.db.getReference("messages/${if (model.auth.uid!! < args.uid) "${model.auth.uid}-${args.uid}" else "${args.uid}-${model.auth.uid}"}")
 
@@ -109,13 +110,14 @@ class ChatFragment : Fragment() {
                 val user = snapshot.getValue<UserRec>()!!
                 activity.setActionBarTitle(user.username)
                 activity.setActionBarSubTitle(
-                    if (user.online)
-                        getString(R.string.online)
-                    else
-                        getString(R.string.last_seen, DateTimeFormatter
+                    when {
+                        user.typing == model.auth.uid -> getString(R.string.typing)
+                        user.online -> getString(R.string.online)
+                        else -> getString(R.string.last_seen, DateTimeFormatter
                             .ofPattern(getString(R.string.last_seen_pattern))
                             .withZone(ZoneId.systemDefault())
                             .format(Instant.ofEpochMilli(user.lastSeen)))
+                    }
                 )
             }
         })
@@ -137,6 +139,14 @@ class ChatFragment : Fragment() {
 
         message.addTextChangedListener {
             send_button.isEnabled = !it.isNullOrBlank() || imageUri != null
+            if (!typing) {
+                typing = true
+                model.db.getReference("users/${model.auth.uid}/typing").setValue(args.uid)
+                Timer().schedule(2000) {
+                    typing = false
+                    model.db.getReference("users/${model.auth.uid}/typing").setValue(null)
+                }
+            }
         }
 
         cancel_edit_button.setOnClickListener {
@@ -179,6 +189,7 @@ class ChatFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         model.db.getReference("users/${model.auth.uid}/inChatWith").setValue(args.uid)
+        NotificationManagerCompat.from(requireContext()).cancel(args.uid.hashCode())
     }
 
     override fun onDestroyView() {
@@ -231,7 +242,7 @@ class ChatFragment : Fragment() {
                     keySet = true
                 }
                 val value = snapshot.getValue<MessageRec>()!!
-                messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!)
+                messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!, chatRef)
                 adapter.add(0, messages[snapshot.key!!]!!)
                 recycler_view.scrollToPosition(0)
             }
@@ -243,9 +254,10 @@ class ChatFragment : Fragment() {
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val value = snapshot.getValue<MessageRec>()!!
-                if (value.text == messages[snapshot.key!!]!!.message.text)
+                val message = messages[snapshot.key!!]!!
+                if (value.text == message.message.text && value.seen == message.message.seen)
                     return
-                messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!)
+                messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!, chatRef)
                 adapter.set(messages.toSortedMap().values.reversed())
             }
         })
@@ -270,7 +282,7 @@ class ChatFragment : Fragment() {
                 loaded += 1
 
                 val value = snapshot.getValue<MessageRec>()!!
-                messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!)
+                messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!, chatRef)
                 adapter.add(position, messages[snapshot.key!!]!!)
             }
 
@@ -281,9 +293,10 @@ class ChatFragment : Fragment() {
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val value = snapshot.getValue<MessageRec>()!!
-                if (value.text == messages[snapshot.key!!]!!.message.text)
+                val message = messages[snapshot.key!!]!!
+                if (value.text == message.message.text && value.seen == message.message.seen)
                     return
-                messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!)
+                messages[snapshot.key!!] = MessageItem(value, value.from == model.auth.uid, snapshot.key!!, chatRef)
                 adapter.set(messages.toSortedMap().values.reversed())
             }
         })

@@ -9,7 +9,8 @@ data class Message(
     val to: String = "",
     val text: String = "",
     val imageUrl: String = "",
-    val timestamp: Map<String, String> = ServerValue.TIMESTAMP
+    val timestamp: Map<String, String> = ServerValue.TIMESTAMP,
+    val seen: Boolean = false
 )
 
 @Keep
@@ -18,5 +19,6 @@ data class MessageRec(
     val to: String = "",
     val text: String = "",
     val imageUrl: String = "",
-    val timestamp: Long = 0
+    val timestamp: Long = 0,
+    val seen: Boolean = false
 )

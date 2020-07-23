@@ -36,4 +36,6 @@
     <string name="online">Тутъ</string>
     <string name="last_seen">Былъ(а) здѣсь %1$s</string>
     <string name="last_seen_pattern">d.MM \'въ\' HH:mm</string>
+    <string name="typing">Печатаетъ…</string>
+    <string name="seen_status">Статусъ прочтенія</string>
 </resources>

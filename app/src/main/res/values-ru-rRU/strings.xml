@@ -36,4 +36,6 @@
     <string name="online">В сети</string>
     <string name="last_seen">Был(а) в сети %1$s</string>
     <string name="last_seen_pattern">d.MM \'в\' HH:mm</string>
+    <string name="seen_status">Статус прочтения</string>
+    <string name="typing">Печатает…</string>
 </resources>
