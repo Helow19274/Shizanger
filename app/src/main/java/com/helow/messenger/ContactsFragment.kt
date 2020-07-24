@@ -15,7 +15,7 @@ import kotlin.concurrent.thread
 
 class ContactsFragment : Fragment() {
     private val model: MainActivityViewModel by activityViewModels()
-    private val adapter = ItemAdapter<ContactItem>()
+    private val adapter = ItemAdapter<UserItem>()
     private val fastAdapter = FastAdapter.with(adapter)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

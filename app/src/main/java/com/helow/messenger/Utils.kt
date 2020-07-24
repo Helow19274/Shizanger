@@ -25,8 +25,8 @@ operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: T) {
 }
 
 operator fun <T> MutableLiveData<ArrayList<T>>.minusAssign(values: T) {
-    val uid = (values as ContactItem).user.uid
-    val value = this.value?.filterNot { (it as ContactItem).user.uid == uid } ?: listOf()
+    val uid = (values as UserItem).user.uid
+    val value = this.value?.filterNot { (it as UserItem).user.uid == uid } ?: listOf()
     this.value = ArrayList(value.toMutableList())
 }
 

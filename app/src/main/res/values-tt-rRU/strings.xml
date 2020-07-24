@@ -38,4 +38,5 @@
     <string name="last_seen_pattern">d.MM \'въ\' HH:mm</string>
     <string name="typing">Печатаетъ…</string>
     <string name="seen_status">Статусъ прочтенія</string>
+    <string name="me">Я</string>
 </resources>

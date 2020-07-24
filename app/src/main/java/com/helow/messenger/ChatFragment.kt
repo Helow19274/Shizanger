@@ -20,8 +20,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
@@ -41,8 +39,9 @@ class ChatFragment : Fragment() {
     private val fastAdapter = FastAdapter.with(adapter)
     private val messages = mutableMapOf<String, MessageItem>()
     private lateinit var chatRef: DatabaseReference
-    private var editId = ""
-    private var beforeEditText = ""
+    private var editId: String? = null
+    private var beforeEditText: String? = null
+    private var beforeEditImageUri: Uri? = null
     private var lastKey: String? = null
     private var loaded = 0
     private var imageUri: Uri? = null
@@ -71,6 +70,8 @@ class ChatFragment : Fragment() {
                         0 -> {
                             editId = item.messageId
                             beforeEditText = message.text.toString()
+                            beforeEditImageUri = imageUri
+                            imageUri = null
                             if (item.message.imageUrl != null)
                                 imageUri = item.message.imageUrl.toUri()
                             if (imageUri != null)
@@ -132,9 +133,16 @@ class ChatFragment : Fragment() {
                     for (chunk in chunks)
                         sendMessage(args.uid, chunk)
                 message.text?.clear()
-                message.append(beforeEditText)
-                editId = ""
-                beforeEditText = ""
+                if (beforeEditText != null)
+                    message.append(beforeEditText)
+                editId = null
+                if (beforeEditImageUri != null)
+                    attach_button.setIconResource(R.drawable.file_attached)
+                else
+                    attach_button.setIconResource(R.drawable.attach_file)
+                imageUri = beforeEditImageUri
+                beforeEditImageUri = null
+                beforeEditText = null
             }
         }
 
@@ -152,11 +160,23 @@ class ChatFragment : Fragment() {
 
         cancel_edit_button.setOnClickListener {
             message.text?.clear()
-            editId = ""
+            editId = null
             cancel_edit_button.visibility = View.GONE
             message.text?.clear()
-            message.append(beforeEditText)
-            beforeEditText = ""
+            if (beforeEditText != null)
+                message.append(beforeEditText)
+            else
+                message.isEnabled = false
+            beforeEditText = null
+            if (beforeEditImageUri != null)
+                attach_button.setIconResource(R.drawable.file_attached)
+            else {
+                attach_button.setIconResource(R.drawable.attach_file)
+                if (message.text.isNullOrBlank())
+                    send_button.isEnabled = false
+            }
+            imageUri = beforeEditImageUri
+            beforeEditImageUri = null
         }
 
         attach_button.setOnClickListener {
@@ -215,19 +235,19 @@ class ChatFragment : Fragment() {
                 imageUri.toString()
             else {
                 val stream = requireActivity().contentResolver.openInputStream(imageUri!!)!!
-                val ref = Firebase.storage.getReference("images").child(UUID.randomUUID().toString())
+                val ref = model.storage.child(UUID.randomUUID().toString())
                 ref.putStream(stream).await()
                 ref.downloadUrl.await().toString()
             }
         }
         val messageText = text?.trim()
-        if (editId == "") {
+        if (editId == null) {
             chatRef.push().setValue(Message(model.auth.uid!!, to, messageText, url)).await()
             imageUri = null
             attach_button.setIconResource(R.drawable.attach_file)
         }
         else {
-            chatRef.child(editId).setValue(MessageRec(model.auth.uid!!, to, messageText, url, messages[editId]!!.message.timestamp)).await()
+            chatRef.child(editId!!).setValue(MessageRec(model.auth.uid!!, to, messageText, url, messages[editId!!]!!.message.timestamp)).await()
             cancel_edit_button.visibility = View.GONE
             imageUri = null
             attach_button.setIconResource(R.drawable.attach_file)

@@ -20,7 +20,7 @@ class DirectReplyReceiver : BroadcastReceiver() {
         val data = RemoteInput.getResultsFromIntent(intent)
         if (data != null) {
             val person = Person.Builder()
-                .setName("Me")
+                .setName(context.getString(R.string.me))
                 .build()
             val result = goAsync()
             val toUid = intent.getStringExtra("uid")!!

@@ -9,13 +9,15 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.storage.ktx.storage
 
 class MainActivityViewModel : ViewModel() {
     val auth = Firebase.auth
     val db = Firebase.database
+    val storage = Firebase.storage.getReference("images")
     val instanceId = FirebaseInstanceId.getInstance()
     val messaging = FirebaseMessaging.getInstance()
-    val contacts = MutableLiveData<ArrayList<ContactItem>>()
+    val contacts = MutableLiveData<ArrayList<UserItem>>()
     private var listenersInitialized = false
 
     fun initContactsListeners() {
@@ -26,7 +28,7 @@ class MainActivityViewModel : ViewModel() {
                 val key = snapshot.key
                 db.getReference("users/${snapshot.getValue<String>()!!}").addListenerForSingleValueEvent(object : MyValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        contacts += ContactItem(snapshot.getValue<UserRec>()!!, key)
+                        contacts += UserItem(snapshot.getValue<UserRec>()!!, key)
                     }
                 })
             }
@@ -35,7 +37,7 @@ class MainActivityViewModel : ViewModel() {
                 val key = snapshot.key
                 db.getReference("users/${snapshot.getValue<String>()!!}").addListenerForSingleValueEvent(object : MyValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        contacts -= ContactItem(snapshot.getValue<UserRec>()!!, key)
+                        contacts -= UserItem(snapshot.getValue<UserRec>()!!, key)
                     }
                 })
             }

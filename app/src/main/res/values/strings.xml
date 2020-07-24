@@ -38,4 +38,5 @@
     <string name="last_seen_pattern">d.MM \'at\' HH:mm</string>
     <string name="seen_status">Seen status</string>
     <string name="typing">Typing…</string>
+    <string name="me">Me</string>
 </resources>

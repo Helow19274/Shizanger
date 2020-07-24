@@ -24,7 +24,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val preferences = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
-        var name = ""
+        var name: String? = null
 
         model.db.getReference("users/${model.auth.uid}/username").addValueEventListener(viewLifecycleOwner, object : MyValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -62,8 +62,8 @@ class ProfileFragment : Fragment() {
 
         username.addTextChangedListener {
             when {
-                it.isNullOrBlank() -> username_view.error = getString(R.string.empty_field)
                 it.toString() == name -> update_button.isEnabled = false
+                it.isNullOrBlank() -> username_view.error = getString(R.string.empty_field)
                 else -> {
                     username_view.error = null
                     update_button.isEnabled = true

@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class AddContactsFragment : Fragment() {
-    private val adapter = ItemAdapter<ContactItem>()
+    private val adapter = ItemAdapter<UserItem>()
     private val fastAdapter = FastAdapter.with(adapter)
     private val model: MainActivityViewModel by activityViewModels()
 
@@ -46,7 +46,7 @@ class AddContactsFragment : Fragment() {
         model.db.getReference("users").addChildEventListener(viewLifecycleOwner, object : MyChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 if (snapshot.key !in uids)
-                    adapter.add(ContactItem(snapshot.getValue<UserRec>()!!))
+                    adapter.add(UserItem(snapshot.getValue<UserRec>()!!))
             }
         })
     }

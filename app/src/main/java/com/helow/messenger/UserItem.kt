@@ -12,7 +12,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-open class ContactItem(val user: UserRec, val contactKey: String?=null) : AbstractItem<ContactItem.ViewHolder>() {
+open class UserItem(val user: UserRec, val contactKey: String?=null) : AbstractItem<UserItem.ViewHolder>() {
     val ref = Firebase.database.getReference("users/${user.uid}")
 
     override val type: Int
@@ -23,7 +23,7 @@ open class ContactItem(val user: UserRec, val contactKey: String?=null) : Abstra
 
     override fun getViewHolder(v: View) = ViewHolder(v)
 
-    class ViewHolder(view: View) : FastAdapter.ViewHolder<ContactItem>(view) {
+    class ViewHolder(view: View) : FastAdapter.ViewHolder<UserItem>(view) {
         private val username = view.username
         private val email = view.email
         private val lastSeen = view.last_seen
@@ -41,13 +41,13 @@ open class ContactItem(val user: UserRec, val contactKey: String?=null) : Abstra
             }
         }
 
-        override fun bindView(item: ContactItem, payloads: List<Any>) {
+        override fun bindView(item: UserItem, payloads: List<Any>) {
             username.text = item.user.username
             email.text = item.user.email
             item.ref.addValueEventListener(listener)
         }
 
-        override fun unbindView(item: ContactItem) {
+        override fun unbindView(item: UserItem) {
             username.text = null
             email.text = null
             lastSeen.text = null

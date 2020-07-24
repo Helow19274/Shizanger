@@ -3,7 +3,8 @@ package com.helow.messenger
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.Target
 import com.google.firebase.database.DatabaseReference
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -40,9 +41,11 @@ class MessageItem(val message: MessageRec, val sent: Boolean, val messageId: Str
                 .withZone(ZoneId.systemDefault())
                 .format(Instant.ofEpochMilli(item.message.timestamp))
             if (item.message.imageUrl != null)
-                Glide.with(image)
+                GlideApp.with(image)
                     .load(item.message.imageUrl)
-                    .dontAnimate()
+                    .placeholder(R.drawable.image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(image)
             else
                 image.setImageDrawable(null)
