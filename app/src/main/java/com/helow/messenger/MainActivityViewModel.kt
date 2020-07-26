@@ -18,12 +18,13 @@ class MainActivityViewModel : ViewModel() {
     val instanceId = FirebaseInstanceId.getInstance()
     val messaging = FirebaseMessaging.getInstance()
     val contacts = MutableLiveData<ArrayList<UserItem>>()
+    private lateinit var contactsListener: MyChildEventListener
     private var listenersInitialized = false
 
     fun initContactsListeners() {
         if (listenersInitialized)
             return
-        db.getReference("users/${auth.uid}/contacts").addChildEventListener(object : MyChildEventListener {
+        contactsListener = object : MyChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val key = snapshot.key
                 db.getReference("users/${snapshot.getValue<String>()!!}").addListenerForSingleValueEvent(object : MyValueEventListener {
@@ -41,7 +42,12 @@ class MainActivityViewModel : ViewModel() {
                     }
                 })
             }
-        })
+        }
+        db.getReference("users/${auth.uid}/contacts").addChildEventListener(contactsListener)
         listenersInitialized = true
+    }
+
+    fun detachListeners() {
+        db.getReference("users/${auth.uid}/contacts").removeEventListener(contactsListener)
     }
 }

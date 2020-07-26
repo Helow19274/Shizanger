@@ -62,6 +62,7 @@ class ContactsFragment : Fragment() {
         when (item.itemId) {
             R.id.log_out -> {
                 model.db.getReference("users/${model.auth.uid}/online").setValue(false)
+                model.detachListeners()
                 model.messaging.isAutoInitEnabled = false
                 model.db.getReference("/users/${model.auth.uid}/token").setValue(null).addOnSuccessListener {
                     thread {
