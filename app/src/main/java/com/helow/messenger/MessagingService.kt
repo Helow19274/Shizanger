@@ -36,7 +36,7 @@ class MessagingService : FirebaseMessagingService() {
             .setName(message.data["title"])
             .build()
 
-        val text = if (message.data["content"]!!.isNotEmpty())
+        val text = if (message.data["content"] != null)
             message.data["content"]!!
         else
             wrapContextWithLocale(this).getString(R.string.picture)
