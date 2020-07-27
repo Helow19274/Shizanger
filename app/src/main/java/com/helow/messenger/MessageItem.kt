@@ -29,7 +29,11 @@ class MessageItem(val message: MessageRec, val sent: Boolean, val messageId: Str
         private val seen = view.seen_status
 
         override fun bindView(item: MessageItem, payloads: List<Any>) {
-            messageText.text = item.message.text
+            if (item.message.text != null)
+                messageText.text = item.message.text
+            else
+                messageText.visibility = View.GONE
+
             if (item.sent) {
                 if (item.message.seen)
                     seen.setImageResource(R.drawable.seen)
@@ -56,6 +60,7 @@ class MessageItem(val message: MessageRec, val sent: Boolean, val messageId: Str
 
         override fun unbindView(item: MessageItem) {
             messageText.text = null
+            messageText.visibility = View.VISIBLE
             timestampText.text = null
             if (item.sent)
                 seen.setImageDrawable(null)
