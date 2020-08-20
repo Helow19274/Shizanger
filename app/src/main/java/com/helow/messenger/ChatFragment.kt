@@ -60,7 +60,7 @@ class ChatFragment : Fragment() {
         recycler_view.adapter = fastAdapter
 
         fastAdapter.onClickListener = { _, _, item, _ ->
-            val dialog = MaterialAlertDialogBuilder(context).apply {
+            val dialog = MaterialAlertDialogBuilder(requireContext()).apply {
                 setTitle(R.string.choose_action)
                 setNegativeButton(R.string.cancel) { _, _ -> }
             }

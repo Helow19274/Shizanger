@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mikepenz.fastadapter.FastAdapter
@@ -30,7 +29,7 @@ class ContactsFragment : Fragment() {
         recycler_view.adapter = fastAdapter
         model.initContactsListeners()
 
-        model.contacts.observe(viewLifecycleOwner, Observer {
+        model.contacts.observe(viewLifecycleOwner, {
             adapter.set(it)
         })
 
@@ -41,7 +40,7 @@ class ContactsFragment : Fragment() {
         }
 
         fastAdapter.onLongClickListener = { _, _, item, _ ->
-            MaterialAlertDialogBuilder(context)
+            MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.are_you_sure)
                 .setMessage(R.string.remove_contact)
                 .setNegativeButton(R.string.no) { _, _ -> }
