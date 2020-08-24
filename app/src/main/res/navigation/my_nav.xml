@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.helow.messenger.RegisterFragment"
+        android:name="com.helow.messenger.fragment.RegisterFragment"
         android:label="@string/registration"
         tools:layout="@layout/fragment_register" >
         <action
@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:label="@string/login"
-        android:name="com.helow.messenger.LoginFragment"
+        android:name="com.helow.messenger.fragment.LoginFragment"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_contactsFragment"
@@ -72,7 +72,7 @@
 
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="com.helow.messenger.ContactsFragment"
+        android:name="com.helow.messenger.fragment.ContactsFragment"
         android:label="@string/contacts"
         tools:layout="@layout/fragment_contacts" >
         <action
@@ -110,12 +110,12 @@
 
     <fragment
         android:id="@+id/addContactsFragment"
-        android:name="com.helow.messenger.AddContactsFragment"
+        android:name="com.helow.messenger.fragment.AddContactsFragment"
         android:label="@string/add_contacts"
         tools:layout="@layout/fragment_add_contacts" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.helow.messenger.ChatFragment"
+        android:name="com.helow.messenger.fragment.ChatFragment"
         android:label=""
         tools:layout="@layout/fragment_chat">
 
@@ -130,7 +130,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.helow.messenger.ProfileFragment"
+        android:name="com.helow.messenger.fragment.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

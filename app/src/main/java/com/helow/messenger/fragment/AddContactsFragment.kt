@@ -1,4 +1,4 @@
-package com.helow.messenger
+package com.helow.messenger.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.getValue
+import com.helow.messenger.*
+import com.helow.messenger.model.UserRec
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import kotlinx.android.synthetic.main.fragment_add_contacts.*

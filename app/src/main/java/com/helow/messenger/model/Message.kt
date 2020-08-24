@@ -1,4 +1,4 @@
-package com.helow.messenger
+package com.helow.messenger.model
 
 import androidx.annotation.Keep
 import com.google.firebase.database.ServerValue

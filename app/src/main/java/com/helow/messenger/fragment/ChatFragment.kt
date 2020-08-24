@@ -1,4 +1,4 @@
-package com.helow.messenger
+package com.helow.messenger.fragment
 
 import android.app.Activity
 import android.content.Context
@@ -20,6 +20,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.getValue
+import com.helow.messenger.*
+import com.helow.messenger.model.Message
+import com.helow.messenger.model.MessageRec
+import com.helow.messenger.model.UserRec
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
@@ -65,7 +69,7 @@ class ChatFragment : Fragment() {
                 setNegativeButton(R.string.cancel) { _, _ -> }
             }
             if (item.sent)
-                dialog.setItems(arrayOf(getString(R.string.edit), getString(R.string.remove))) {_, which ->
+                dialog.setItems(arrayOf(getString(R.string.edit), getString(R.string.remove))) { _, which ->
                     when (which) {
                         0 -> {
                             editId = item.messageId
@@ -91,7 +95,7 @@ class ChatFragment : Fragment() {
                     }
                 }
             else
-                dialog.setItems(arrayOf(getString(R.string.remove))) {_, _ ->
+                dialog.setItems(arrayOf(getString(R.string.remove))) { _, _ ->
                     chatRef.child(item.messageId).removeValue()
                 }
             dialog.show()
@@ -181,9 +185,8 @@ class ChatFragment : Fragment() {
 
         attach_button.setOnClickListener {
             if (imageUri == null) {
-                val intent = Intent()
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
                 intent.type = "image/*"
-                intent.action = Intent.ACTION_GET_CONTENT
                 startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), 1)
             }
             else {

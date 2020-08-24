@@ -1,4 +1,4 @@
-package com.helow.messenger
+package com.helow.messenger.model
 
 import androidx.annotation.Keep
 
@@ -12,7 +12,8 @@ data class User(
     val online: Boolean = true,
     val lastSeen: Map<String, String>? = null,
     val inChatWith: String? = null,
-    val typing: String? = null
+    val typing: String? = null,
+    val imageUrl: String? = null
 )
 
 @Keep
@@ -25,5 +26,6 @@ data class UserRec(
     val online: Boolean = true,
     val lastSeen: Long = 0,
     val inChatWith: String? = null,
-    val typing: String? = null
+    val typing: String? = null,
+    val imageUrl: String? = null
 )

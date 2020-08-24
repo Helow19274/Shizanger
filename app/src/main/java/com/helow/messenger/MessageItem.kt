@@ -6,6 +6,7 @@ import android.widget.TextView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.database.DatabaseReference
+import com.helow.messenger.model.MessageRec
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import kotlinx.android.synthetic.main.message_sent_item.view.*

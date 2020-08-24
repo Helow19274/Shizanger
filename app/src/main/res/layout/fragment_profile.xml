@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ProfileFragment">
+    tools:context=".fragment.ProfileFragment">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_view"
@@ -41,11 +41,10 @@
             tools:layout_editor_absoluteX="35dp"
             tools:layout_editor_absoluteY="285dp" />
 
-
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/update_button"
+        android:id="@+id/update_username_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -54,14 +53,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username_view" />
 
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="108dp"
+        android:layout_height="108dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/default_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/update_username_button"
+        android:contentDescription="@string/profile_image" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/change_locale_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:text="@string/change_locale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update_button" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
+import android.graphics.*
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
@@ -13,10 +13,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
+import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.*
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.database.*
 import java.util.*
+import kotlin.math.min
 
 operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: T) {
     val value = this.value ?: arrayListOf()
@@ -147,4 +149,28 @@ interface MyChildEventListener : ChildEventListener {
 
 interface MyValueEventListener : ValueEventListener {
     override fun onCancelled(error: DatabaseError) { }
+}
+
+fun getCircledBitmap(bitmap: Bitmap, angle: Int): Bitmap {
+    val size = min(bitmap.height, bitmap.width)
+    val matrix = Matrix()
+
+    when (angle) {
+        ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+        ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+        ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+    }
+
+    val source = Bitmap.createBitmap(bitmap, 0, 0, size, size, matrix, true)
+
+    val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+    val paint = Paint()
+    val rect = Rect(0, 0, size, size)
+    canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(source, rect, rect, paint)
+    if (size > 1000)
+        return Bitmap.createScaledBitmap(output, 1000, 1000, true)
+    return output
 }

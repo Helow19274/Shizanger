@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.content.edit
+import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.auth.ktx.auth
@@ -32,17 +33,28 @@ class MessagingService : FirebaseMessagingService() {
             })
 
         val args = bundleOf("uid" to message.data["sender"])
-        val sender = Person.Builder()
-            .setName(message.data["title"])
-            .build()
 
         val text = if (message.data["content"] != null)
             message.data["content"]!!
         else
             wrapContextWithLocale(this).getString(R.string.picture)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            addReply(this, text, message.data["sender"].hashCode(), sender, args)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val sender = Person.Builder()
+                .setName(message.data["title"])
+
+            if (message.data["imageUrl"] != null) {
+                val icon = GlideApp
+                    .with(applicationContext)
+                    .asBitmap()
+                    .load(message.data["imageUrl"])
+                    .submit()
+                    .get()
+                sender.setIcon(IconCompat.createWithBitmap(icon))
+            }
+            addReply(this, text, message.data["sender"].hashCode(), sender.build(), args)
+        }
+
         else {
             val preferences = getSharedPreferences("notifications", Context.MODE_PRIVATE)
             val notificationId = preferences.getInt("notificationId", 1)

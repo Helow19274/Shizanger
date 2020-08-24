@@ -39,4 +39,6 @@
     <string name="seen_status">Seen status</string>
     <string name="typing">Typing…</string>
     <string name="me">Me</string>
+    <string name="remove_profile_photo">Remove profile photo?</string>
+    <string name="profile_image">Profile image</string>
 </resources>

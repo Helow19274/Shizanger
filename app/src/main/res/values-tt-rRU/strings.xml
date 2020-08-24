@@ -39,4 +39,6 @@
     <string name="typing">Печатаетъ…</string>
     <string name="seen_status">Статусъ прочтенія</string>
     <string name="me">Я</string>
+    <string name="remove_profile_photo">Удалить изображеніе профиля?</string>
+    <string name="profile_image">Изображеніе профиля</string>
 </resources>

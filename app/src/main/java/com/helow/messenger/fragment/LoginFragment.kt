@@ -1,4 +1,4 @@
-package com.helow.messenger
+package com.helow.messenger.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +13,8 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.helow.messenger.MainActivityViewModel
+import com.helow.messenger.R
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await

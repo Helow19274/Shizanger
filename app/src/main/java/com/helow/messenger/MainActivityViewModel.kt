@@ -10,11 +10,13 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.ktx.storage
+import com.helow.messenger.model.UserRec
 
 class MainActivityViewModel : ViewModel() {
     val auth = Firebase.auth
     val db = Firebase.database
     val storage = Firebase.storage.getReference("images")
+    val profileStorage = Firebase.storage.getReference("avatars")
     val instanceId = FirebaseInstanceId.getInstance()
     val messaging = FirebaseMessaging.getInstance()
     val contacts = MutableLiveData<ArrayList<UserItem>>()
