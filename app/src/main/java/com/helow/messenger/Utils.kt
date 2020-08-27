@@ -115,6 +115,8 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
         setAutoCancel(true)
         addAction(action)
         setStyle(newStyle)
+        if (sender.name == context.getString(R.string.me))
+            setNotificationSilent()
         build()
     }
     NotificationManagerCompat.from(context).notify(notificationId, notification)
