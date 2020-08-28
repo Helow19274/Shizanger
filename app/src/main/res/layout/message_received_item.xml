@@ -19,14 +19,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:background="@drawable/rounded"
+            android:background="@drawable/rounded_received"
             tools:ignore="UselessParent">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:autoLink="all"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
