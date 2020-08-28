@@ -3,6 +3,7 @@ package com.helow.messenger
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -17,6 +18,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import java.io.File
+import java.util.*
+import kotlin.concurrent.schedule
 
 class MessagingService : FirebaseMessagingService() {
     override fun attachBaseContext(newBase: Context) {
@@ -34,25 +38,51 @@ class MessagingService : FirebaseMessagingService() {
 
         val args = bundleOf("uid" to message.data["sender"])
 
-        val text = if (message.data["content"] != null)
+        var text = if (message.data["content"] != null)
             message.data["content"]!!
         else
             wrapContextWithLocale(this).getString(R.string.picture)
+
+        if (message.data["imageUrl"] != null)
+            text = "\uD83D\uDDBC$text"
+
+        val imageUrl = if (message.data["content"] == null && message.data["imageUrl"] != null)
+            message.data["imageUrl"]
+        else
+            null
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val sender = Person.Builder()
                 .setName(message.data["title"])
 
-            if (message.data["imageUrl"] != null) {
+            if (message.data["avatarUrl"] != null) {
                 val icon = GlideApp
                     .with(applicationContext)
                     .asBitmap()
-                    .load(message.data["imageUrl"])
+                    .load(message.data["avatarUrl"])
                     .submit()
                     .get()
                 sender.setIcon(IconCompat.createWithBitmap(icon))
             }
+            if (imageUrl != null) {
+                val fileName = UUID.randomUUID().toString()
+                val image = GlideApp
+                    .with(applicationContext)
+                    .asBitmap()
+                    .load(imageUrl)
+                    .submit()
+                    .get()
+                applicationContext.openFileOutput(fileName, Context.MODE_PRIVATE).use {
+                    image.compress(Bitmap.CompressFormat.PNG, 100, it)
+                }
+                args.putString("imageUrl", applicationContext.filesDir.listFiles { _, name -> name == fileName }!![0].absolutePath)
+            }
             addReply(this, text, message.data["sender"].hashCode(), sender.build(), args)
+
+            if (args["imageUrl"] != null)
+                Timer().schedule(500) {
+                    File(args.getString("imageUrl")!!).delete()
+                }
         }
 
         else {

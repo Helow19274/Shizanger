@@ -32,7 +32,7 @@
     <string name="ok">OK</string>
     <string name="reply">Reply</string>
     <string name="select_picture">Select picture</string>
-    <string name="picture">Picture</string>
+    <string name="picture">🖼Picture</string>
     <string name="online">Online</string>
     <string name="last_seen">Last seen %1$s</string>
     <string name="last_seen_pattern">d.MM \'at\' HH:mm</string>

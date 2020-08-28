@@ -32,7 +32,7 @@
     <string name="ok">Ок</string>
     <string name="reply">Ответить</string>
     <string name="select_picture">Выберите изображение</string>
-    <string name="picture">Изображение</string>
+    <string name="picture">🖼Изображение</string>
     <string name="online">В сети</string>
     <string name="last_seen">Был(а) в сети %1$s</string>
     <string name="last_seen_pattern">d.MM \'в\' HH:mm</string>

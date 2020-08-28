@@ -13,10 +13,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
+import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.*
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.database.*
+import java.io.File
 import java.util.*
 import kotlin.math.min
 
@@ -80,11 +82,20 @@ fun addReply(context: Context, message: CharSequence, notificationId: Int, sende
     if (activeNotification != null) {
         val activeStyle = NotificationCompat.MessagingStyle.extractMessagingStyleFromNotification(activeNotification)!!
         activeStyle.messages.forEach {
-            newStyle.addMessage(NotificationCompat.MessagingStyle.Message(it.text, it.timestamp, it.person))
+            newStyle.addMessage(NotificationCompat.MessagingStyle.Message(it.text, it.timestamp, it.person).apply {
+                if (it.dataUri != null)
+                    setData("image/", it.dataUri)
+            })
         }
     }
 
-    newStyle.addMessage(message, System.currentTimeMillis(), sender)
+    val newMessage = NotificationCompat.MessagingStyle.Message(message, System.currentTimeMillis(), sender).apply {
+        if (args["imageUrl"] != null) {
+            val uri = FileProvider.getUriForFile(context, "com.helow.messenger", File(args.getString("imageUrl")!!))
+            setData("image/", uri)
+        }
+    }
+    newStyle.addMessage(newMessage)
 
     val pendingIntent = NavDeepLinkBuilder(context).run {
         setGraph(R.navigation.my_nav)

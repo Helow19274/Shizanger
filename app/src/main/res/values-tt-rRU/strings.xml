@@ -32,7 +32,7 @@
     <string name="ok">Выбрать</string>
     <string name="reply">Отвѣтить</string>
     <string name="select_picture">Выберите фотокарточку</string>
-    <string name="picture">Фотокарточка</string>
+    <string name="picture">🖼Фотокарточка</string>
     <string name="online">Тутъ</string>
     <string name="last_seen">Былъ(а) здѣсь %1$s</string>
     <string name="last_seen_pattern">d.MM \'въ\' HH:mm</string>
