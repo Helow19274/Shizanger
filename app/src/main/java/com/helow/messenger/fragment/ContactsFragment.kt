@@ -1,13 +1,11 @@
 package com.helow.messenger.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.helow.messenger.MainActivity
 import com.helow.messenger.MainActivityViewModel
 import com.helow.messenger.R
 import com.helow.messenger.UserItem
@@ -38,8 +36,7 @@ class ContactsFragment : Fragment() {
         })
 
         fastAdapter.onClickListener = { _, _, item, _ ->
-            val activity = requireActivity() as MainActivity
-            findNavController().navigate(ContactsFragmentDirections.actionContactsFragmentToChatFragment(item.user.uid, activity.intent.getStringExtra(Intent.EXTRA_TEXT)))
+            findNavController().navigate(ContactsFragmentDirections.actionContactsFragmentToChatFragment(item.user.uid))
             false
         }
 

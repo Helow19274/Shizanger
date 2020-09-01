@@ -122,11 +122,6 @@
         <argument
             android:name="uid"
             app:argType="string" />
-        <argument
-            android:name="messageFromShare"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null"/>
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

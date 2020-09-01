@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -203,17 +204,24 @@ class ChatFragment : Fragment() {
                 addNewMessagesListener()
             }
         })
-
-        if (args.messageFromShare != null) {
-            message.append(args.messageFromShare)
-            activity.intent.removeExtra(Intent.EXTRA_TEXT)
-        }
     }
 
     override fun onStart() {
         super.onStart()
         model.db.getReference("users/${model.auth.uid}/inChatWith").setValue(args.uid)
         NotificationManagerCompat.from(requireContext()).cancel(args.uid.hashCode())
+        val activity = requireActivity()
+        if (activity.intent != null) {
+            if (activity.intent.type == "text/plain")
+                message.append(activity.intent.getStringExtra(Intent.EXTRA_TEXT))
+            else if (activity.intent.type?.startsWith("image/") == true)
+                activity.intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM)?.let {
+                    imageUri = it as Uri
+                    send_button.isEnabled = true
+                    attach_button.setIconResource(R.drawable.file_attached)
+                }
+            activity.intent = null
+        }
     }
 
     override fun onDestroyView() {

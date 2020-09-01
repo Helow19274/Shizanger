@@ -49,7 +49,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        intent.removeExtra(Intent.EXTRA_TEXT)
+        if (intent != null)
+            intent.removeExtra(Intent.EXTRA_TEXT)
         if (model.auth.currentUser != null)
             model.db.getReference("users/${model.auth.uid}/online").setValue(false)
     }
