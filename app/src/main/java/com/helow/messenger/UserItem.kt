@@ -10,6 +10,7 @@ import com.google.firebase.ktx.Firebase
 import com.helow.messenger.model.UserRec
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
+import com.stfalcon.imageviewer.StfalconImageViewer
 import kotlinx.android.synthetic.main.user_item.view.*
 
 open class UserItem(val user: UserRec, val contactKey: String?=null) : AbstractItem<UserItem.ViewHolder>() {
@@ -33,14 +34,28 @@ open class UserItem(val user: UserRec, val contactKey: String?=null) : AbstractI
                 val user = snapshot.getValue<UserRec>()!!
                 online.isVisible = user.online
                 username.text = user.username
-                if (user.imageUrl != null)
+                profileImage.isClickable = true
+                if (user.imageUrl != null) {
                     GlideApp
                         .with(view)
                         .load(user.imageUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(profileImage)
-                else
+                    val viewer = StfalconImageViewer.Builder(profileImage.context, listOf(1)) { image, _ ->
+                        GlideApp
+                            .with(view)
+                            .load(user.imageUrl)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(image)
+                    }.withTransitionFrom(profileImage)
+                    profileImage.setOnClickListener {
+                        viewer.show()
+                    }
+                }
+                else {
                     profileImage.setImageResource(R.drawable.default_profile)
+                    profileImage.isClickable = false
+                }
             }
         }
 

@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference
 import com.helow.messenger.model.MessageRec
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
+import com.stfalcon.imageviewer.StfalconImageViewer
 import kotlinx.android.synthetic.main.message_sent_item.view.*
 import java.time.Instant
 import java.time.ZoneId
@@ -45,13 +46,21 @@ class MessageItem(val message: MessageRec, val sent: Boolean, val messageId: Str
                 .ofPattern("d.MM HH:mm")
                 .withZone(ZoneId.systemDefault())
                 .format(Instant.ofEpochMilli(item.message.timestamp))
-            if (item.message.imageUrl != null)
+            if (item.message.imageUrl != null) {
                 GlideApp.with(image)
                     .load(item.message.imageUrl)
                     .placeholder(R.drawable.image)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .into(image)
+
+                val viewer = StfalconImageViewer.Builder(image.context, listOf(1)) { image2, _ ->
+                    image2.setImageDrawable(image.drawable)
+                }.withTransitionFrom(image)
+                image.setOnClickListener {
+                    viewer.show()
+                }
+            }
             else
                 image.setImageDrawable(null)
 
